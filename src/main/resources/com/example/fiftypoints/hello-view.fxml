@@ -1,16 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-
 <?import javafx.scene.control.Button?>
-<VBox alignment="CENTER" spacing="20.0" xmlns:fx="http://javafx.com/fxml"
-      fx:controller="com.example.fiftypoints.controllers.HelloController">
-    <padding>
-        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0"/>
-    </padding>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
 
-    <Label fx:id="welcomeText"/>
-    <Button text="Hello!" onAction="#onHelloButtonClick"/>
+<VBox fx:id="background" alignment="CENTER" fillWidth="false" prefHeight="679.0" prefWidth="544.0" spacing="20.0" stylesheets="@styles/hello-view.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.fiftypoints.controllers.HelloController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+   <VBox fx:id="card" alignment="CENTER" fillWidth="false" prefHeight="590.0" prefWidth="449.0">
+      <children>
+      
+          <Label fx:id="welcomeTittle" alignment="CENTER" contentDisplay="TOP" prefHeight="140.0" prefWidth="392.0" text="CINCUENTAZO">
+            <VBox.margin>
+               <Insets bottom="20.0" />
+            </VBox.margin></Label>
+         <VBox alignment="CENTER" fillWidth="false" prefHeight="166.0" prefWidth="339.0">
+            <children>
+               <Label fx:id="labelUsername" alignment="CENTER" prefHeight="26.0" prefWidth="90.0" text="USERNAME" textAlignment="CENTER">
+                  <font>
+                     <Font size="18.0" />
+                  </font>
+               </Label>
+               <TextField fx:id="inputUsername" prefHeight="26.0" prefWidth="277.0" />
+            </children>
+         </VBox>
+         <VBox alignment="CENTER" prefHeight="189.0" prefWidth="195.0">
+            <children>
+                <Button fx:id="buttonPlay" onAction="#onHelloButtonPlay" prefWidth="63.0" text="Play">
+                  <VBox.margin>
+                     <Insets bottom="18.0" />
+                  </VBox.margin>
+               </Button>
+               <Button fx:id="instructions" mnemonicParsing="false" onAction="#onActionButtonInstructions" text="How to play?" />
+            </children>
+         </VBox>
+      </children>
+   </VBox>
 </VBox>

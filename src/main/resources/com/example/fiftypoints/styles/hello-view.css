@@ -1,0 +1,80 @@
+@font-face {
+    font-family: 'Chewy';
+    src: url("../fonts/Chewy-Regular.ttf");
+}
+#background{
+    -fx-background-color: fff;
+}
+
+#card {
+    -fx-background-radius: 30px;
+    -fx-background-color: #e0e0e0;
+    -fx-effect:
+            dropshadow(gaussian, #bebebe, 30, 0.5, 15, 15),
+            dropshadow(gaussian, #ffffff, 30, 0.5, -15, -15);
+}
+
+#welcomeTittle{
+    -fx-font-family: "Chewy";
+    -fx-text-fill: #000;
+    -fx-font-size: 5em;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+
+}
+
+#buttonPlay {
+    -fx-font-size: 20px;
+    -fx-font-family: "Chewy";
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 2.5px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #000;
+    -fx-background-color: #fff;
+    -fx-border-color: transparent;
+    -fx-border-radius: 45px;
+    -fx-background-radius: 45px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+    -fx-cursor: hand;
+    -fx-outline: none;
+    -fx-transition: background-color 0.7s ease, text-fill 0.7s ease, -fx-translate-y 0.7s ease, -fx-effect 0.7s ease;
+}
+
+#buttonPlay:hover {
+    -fx-background-color: #274154;
+    -fx-effect: dropshadow(one-pass-box, rgb(66, 108, 141), 15, 0.0, 0, 15);
+    -fx-text-fill: #fff;
+    -fx-translate-y: -2px;
+}
+
+#buttonPlay:pressed {
+    -fx-translate-y: -1px;
+}
+
+#labelUsername {
+    -fx-font-family: Chewy;
+}
+
+#inputUsername{
+    -fx-border-width: 0;
+    -fx-background-color: #fff;
+    -fx-background-radius: 100px;
+    -fx-padding: 1em;
+    -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.0, 2, 5);
+    -fx-transition: 300ms ease-in-out;
+}
+
+#inputUsername:focused {
+    -fx-background-color: #ffffff;
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+
+}
+
+#instructions {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #000;
+}
+
+#instructions:hover{
+    -fx-text-fill: #0769ff;-fx-font-size: 1.1em;
+}
