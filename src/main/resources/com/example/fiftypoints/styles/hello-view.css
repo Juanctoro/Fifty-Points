@@ -4,14 +4,15 @@
 }
 #background{
     -fx-background-color: fff;
+    -fx-background-image: url("../images/smooth-green-background.jpg");
 }
 
 #card {
     -fx-background-radius: 30px;
     -fx-background-color: #e0e0e0;
     -fx-effect:
-            dropshadow(gaussian, #bebebe, 30, 0.5, 15, 15),
-            dropshadow(gaussian, #ffffff, 30, 0.5, -15, -15);
+            dropshadow(gaussian, #313131, 30, 0.5, 15, 15),
+            dropshadow(gaussian, #000000, 30, 0.5, -15, -15);
 }
 
 #welcomeTittle{

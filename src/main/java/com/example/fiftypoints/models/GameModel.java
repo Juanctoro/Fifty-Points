@@ -53,14 +53,10 @@ public class GameModel {
 
     public CardModel startCard() {
         ArrayList<CardModel> cards = deck.getDeck();
-
         if (cards.isEmpty()) {
             resetDeck();
             System.out.println("Deck is reset");
             cards = deck.getDeck();
-            if (cards.isEmpty()) {
-                throw new IllegalStateException("La baraja está vacía incluso después de resetear.");
-            }
         }
 
         if (cards.size() == 1) {
