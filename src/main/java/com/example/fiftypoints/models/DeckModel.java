@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class DeckModel {
     private final ArrayList<CardModel> cards;
-    private final ArrayList<CardModel> validCards;
+    private ArrayList<CardModel> validCards;
 
     public DeckModel() {
         this.cards = new ArrayList<>();
@@ -18,34 +18,26 @@ public class DeckModel {
 
         for(String suit : suits) {
             for(String number : numbers) {
-                CardModel card = new CardModel(suit, number);
+                CardModel card = new CardModel(number, suit);
                 cards.add(card);
                 validCards.add(card);
             }
         }
     }
 
-    public void subtractLetter(CardModel card) {
+    public void subtractCard(CardModel card) {
         validCards.remove(card);
     }
 
     public ArrayList<CardModel> getDeck() {
-        return cards;
-    }
-
-    public ArrayList<CardModel> getValidCards() {
         return validCards;
     }
 
-    public void printDeck() {
-        for(CardModel card : cards) {
-            card.printCard();
-        }
+    public ArrayList<CardModel> getNewDeck() {
+        return validCards;
     }
 
-    public void printValidCards() {
-        for(CardModel card : validCards) {
-            card.printCard();
-        }
+    public void setDeck(ArrayList<CardModel> deck) {
+        this.validCards = deck;
     }
 }

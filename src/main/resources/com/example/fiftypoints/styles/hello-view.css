@@ -19,7 +19,6 @@
     -fx-text-fill: #000;
     -fx-font-size: 5em;
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
-
 }
 
 #buttonPlay {
@@ -40,8 +39,8 @@
 }
 
 #buttonPlay:hover {
-    -fx-background-color: #274154;
-    -fx-effect: dropshadow(one-pass-box, rgb(66, 108, 141), 15, 0.0, 0, 15);
+    -fx-background-color: #46d02b;
+    -fx-effect: dropshadow(one-pass-box, rgb(35, 112, 20), 15, 0.0, 0, 15);
     -fx-text-fill: #fff;
     -fx-translate-y: -2px;
 }
@@ -50,7 +49,7 @@
     -fx-translate-y: -1px;
 }
 
-#labelUsername {
+#labelUsername, #howManyMachines, #oneMachine, #twoMachine, #threeMachine {
     -fx-font-family: Chewy;
 }
 

@@ -3,17 +3,44 @@ package com.example.fiftypoints.controllers;
 import com.example.fiftypoints.views.GameView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.event.Event;
 import javafx.stage.Stage;
 import java.io.IOException;
 
 public class HelloController {
+    private int machine;
 
     @FXML
     public TextField inputUsername;
 
+    @FXML
+    public RadioButton oneMachine, twoMachine, threeMachine;
+
+    @FXML
+    public Button buttonPlay;
+
+    public void initialize() {
+        ToggleGroup toggleGroup = new ToggleGroup();
+        oneMachine.setToggleGroup(toggleGroup);
+        twoMachine.setToggleGroup(toggleGroup);
+        threeMachine.setToggleGroup(toggleGroup);
+        buttonPlay.setDisable(true);
+
+        toggleGroup.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+            buttonPlay.setDisable(newValue == null);
+            RadioButton selected = (RadioButton) toggleGroup.getSelectedToggle();
+            if (selected != null) {
+                machine = Integer.parseInt(selected.getText());
+            } else {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error");
+                alert.setHeaderText(null);
+                alert.setContentText("Please select an option before continuing.");
+                alert.showAndWait();
+            }
+        });
+    }
 
     @FXML
     public void onHelloButtonPlay(Event event) throws IOException {
@@ -31,7 +58,7 @@ public class HelloController {
             GameView gameView = GameView.getInstance();
             gameView.show();
             GameController gameController = gameView.getGameController();
-            gameController.initialize(inputUsername.getText());
+            gameController.initialize(inputUsername.getText(), machine);
         }
     }
 

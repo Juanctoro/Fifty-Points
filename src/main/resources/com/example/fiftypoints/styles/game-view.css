@@ -1,0 +1,56 @@
+@font-face {
+    font-family: 'Chewy';
+    src: url("../fonts/Chewy-Regular.ttf");
+}
+
+#labelTittle {
+    -fx-font-family: "Chewy";
+    -fx-text-fill: #000;
+    -fx-font-size: 5em;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+}
+
+#playerUsername {
+    -fx-font-family: "Chewy";
+    -fx-text-fill: #000;
+    -fx-font-size: 2em;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+}
+
+#playerBox {
+}
+
+#throwCard, #takeCard{
+    -fx-font-size: 15px;
+    -fx-font-family: "Chewy";
+    -fx-text-transform: uppercase;
+    -fx-letter-spacing: 2.5px;
+    -fx-font-weight: 500;
+    -fx-text-fill: #000;
+    -fx-background-color: #fff;
+    -fx-border-color: transparent;
+    -fx-border-radius: 45px;
+    -fx-background-radius: 45px;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+    -fx-cursor: hand;
+    -fx-outline: none;
+    -fx-transition: background-color 0.7s ease, text-fill 0.7s ease, -fx-translate-y 0.7s ease, -fx-effect 0.7s ease;
+}
+
+#throwCard:hover, #takeCard:hover {
+    -fx-background-color: #46d02b;
+    -fx-effect: dropshadow(one-pass-box, rgb(35, 112, 20), 15, 0.0, 0, 15);
+    -fx-text-fill: #fff;
+    -fx-translate-y: -2px;
+}
+
+#sumOfPoints {
+    -fx-font-family: Chewy;
+    -fx-font-size: 2em;
+}
+
+#gameGrid, #playerGrid, #machinesGrid, #deckGrid {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 5, 5);
+}
+
+
