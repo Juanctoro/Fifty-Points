@@ -3,21 +3,21 @@
     src: url("../fonts/Chewy-Regular.ttf");
 }
 
+#background {
+    -fx-background-image: url("../images/smooth-green-background.jpg");
+}
+
 #labelTittle {
     -fx-font-family: "Chewy";
-    -fx-text-fill: #000;
+    -fx-text-fill: #fff;
     -fx-font-size: 5em;
-    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4);
 }
 
-#playerUsername {
-    -fx-font-family: "Chewy";
-    -fx-text-fill: #000;
-    -fx-font-size: 2em;
-    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
-}
 
 #playerBox {
+    -fx-border-color: #112c11;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4);
 }
 
 #throwCard, #takeCard{
@@ -44,13 +44,29 @@
     -fx-translate-y: -2px;
 }
 
-#sumOfPoints {
-    -fx-font-family: Chewy;
-    -fx-font-size: 2em;
-}
-
 #gameGrid, #playerGrid, #machinesGrid, #deckGrid {
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 5, 5);
 }
 
+#state, #sumOfPoints, #playerUsername {
+    -fx-font-family: Chewy;
+    -fx-font-size: 3em;
+    -fx-text-fill: #fff;
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4);
+}
 
+#sumOfPoints{
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 10px;
+    -fx-border-color: #388e3c;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+}
+
+#state {
+    -fx-background-color: #4caf50;
+    -fx-background-radius: 10px;
+    -fx-border-color: #388e3c;
+    -fx-border-radius: 10px;
+    -fx-border-width: 2px;
+}

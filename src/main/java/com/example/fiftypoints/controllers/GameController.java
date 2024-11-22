@@ -2,7 +2,6 @@ package com.example.fiftypoints.controllers;
 
 import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
-import com.example.fiftypoints.models.MachineModel;
 import com.example.fiftypoints.views.DrawCard;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -11,6 +10,7 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -19,9 +19,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -35,9 +33,10 @@ public class GameController {
     private int colum = 0;
     private Group group;
     private String cardNumber;
+    private boolean[] lossPlayer = {false, false, false, false};
 
     @FXML
-    private Label playerUsername, sumOfPoints;
+    private Label playerUsername, sumOfPoints, state;
 
     @FXML
     private GridPane playerGrid, machinesGrid, gameGrid, deckGrid;
@@ -77,7 +76,7 @@ public class GameController {
             index = new int[]{3, 8};
         }
         for (CardModel[] cards : handsList) {
-            setCardsGrid(cards, machinesGrid, index[aux]);
+            setCardsGridMachine(cards, machinesGrid, index[aux]);
             aux++;
         }
     }
@@ -85,6 +84,25 @@ public class GameController {
     public void setCardsGrid (CardModel[] cards, GridPane grid, int index){
         for (CardModel card : cards) {
             Group cardGroup = cardDraw.drawCard(card.getNumber(), card.getSuits());
+            grid.add(cardGroup, index, 0);
+            GridPane.setRowSpan(cardGroup, 2);
+            GridPane.setHalignment(cardGroup, HPos.CENTER);
+            GridPane.setValignment(cardGroup, VPos.CENTER);
+
+            index++;
+        }
+    }
+
+    public void setCardsGridMachine (CardModel[] cards, GridPane grid, int index){
+        for (CardModel card : cards) {
+            int num = random.nextInt(2);
+            String color;
+            if(num == 0){
+                color  = "red";
+            } else {
+                color  = "black";
+            }
+            Group cardGroup = cardDraw.drawCardBack(color);
             grid.add(cardGroup, index, 0);
             GridPane.setRowSpan(cardGroup, 2);
             GridPane.setHalignment(cardGroup, HPos.CENTER);
@@ -181,26 +199,43 @@ public class GameController {
 
     public void turnManagement(){
         if(gameModel.deck.getDeck() == null){
-            gameModel.resetDeck();
+            state.setText("Shuffle the cards");
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            pause.setOnFinished(event -> {
+                gameModel.resetDeck();
+            });
+            pause.play();
         }
-        if(playerTurn){
+        if(playerTurn && !lossPlayer[0]){
             takeCard.setDisable(false);
             throwCard.setDisable(false);
+            state.setText("Your turn");
         } else{
             takeCard.setDisable(true);
             throwCard.setDisable(true);
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            if(machine){
+                state.setText("Machine 1 turn");
+            } else if (machine2){
+                state.setText("Machine 2 turn");
+            } else if (machine3){
+                state.setText("Machine 3 turn");
+            }
 
             pause.setOnFinished(event -> {
-                if(machine){
+                if(machine && !lossPlayer[1]){
                     CardModel card = gameModel.machine.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
-                    sumOfPoints.setText(String.valueOf(points));
-                    CardModel cardForSet = gameModel.startCard();
-                    gameModel.machine.setCards(cardForSet, gameModel.machine.getIndex());
+                    sumOfPoints.setText("Points: " + points);
+                    CardModel[] cardForSet = {gameModel.startCard()};
+                    gameModel.machine.setCards(cardForSet[0], gameModel.machine.getIndex());
+                    setCardsGrid(cardForSet, gameGrid,0);
                     System.out.println("Carta 1");
+                    if(loss(machine)){
+                        lossPlayer[1] = true;
+                    }
                     if(gameModel.getMachines() > 1){
                         machine2 = true;
                     } else {
@@ -209,14 +244,18 @@ public class GameController {
                     machine = false;
                     setCard();
                     turnManagement();
-                } else if (machine2) {
+                } else if (machine2 && !lossPlayer[2]) {
                     CardModel card = gameModel.machineTwo.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
-                    sumOfPoints.setText(String.valueOf(points));
-                    CardModel cardForSet = gameModel.startCard();
-                    gameModel.machineTwo.setCards(cardForSet, gameModel.machineTwo.getIndex());
+                    sumOfPoints.setText("Points: " + points);
+                    CardModel[] cardForSet = {gameModel.startCard()};
+                    gameModel.machineTwo.setCards(cardForSet[0], gameModel.machineTwo.getIndex());
+                    setCardsGrid(cardForSet, gameGrid,0);
                     System.out.println("Carta 2");
+                    if(loss(machine2)){
+                        lossPlayer[2] = true;
+                    }
                     if(gameModel.getMachines() > 2){
                         machine3 = true;
                     } else {
@@ -225,17 +264,21 @@ public class GameController {
                     machine2 = false;
                     setCard();
                     turnManagement();
-                } else if (machine3) {
+                } else if (machine3 && !lossPlayer[3]) {
                     CardModel card = gameModel.machineThree.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
-                    sumOfPoints.setText(String.valueOf(points));
-                    CardModel cardForSet = gameModel.startCard();
-                    gameModel.machineThree.setCards(cardForSet, gameModel.machineThree.getIndex());
+                    sumOfPoints.setText("Points: " + points);
+                    CardModel[] cardForSet = {gameModel.startCard()};
+                    gameModel.machineThree.setCards(cardForSet[0], gameModel.machineThree.getIndex());
+                    setCardsGrid(cardForSet, gameGrid,0);
                     System.out.println("Carta 3");
                     playerTurn = true;
                     machine3 = false;
                     setCard();
+                    if(loss(machine3)){
+                        lossPlayer[3] = true;
+                    }
                     turnManagement();
                 }
             });
@@ -276,9 +319,10 @@ public class GameController {
 
     public void throwCard(){
         points += setNumber();
+        gameGrid.add(this.group, 0, 0);
         gameModel.player.throwCard(this.colum);
         removeCardHand(this.colum);
-        sumOfPoints.setText("POINTS: " + points);
+        sumOfPoints.setText("Points: " + points);
         setCard();
         this.playerTurn = false;
 
@@ -323,5 +367,18 @@ public class GameController {
             number = Integer.parseInt(cardNumber);
             return number;
         }
+    }
+
+    private boolean loss(boolean player){
+        if(points > 50){
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Information");
+            alert.setHeaderText(null);
+            alert.setContentText("Hola" + player);
+            alert.showAndWait();
+
+            return true;
+        }
+        return false;
     }
 }
