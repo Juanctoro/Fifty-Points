@@ -2,7 +2,6 @@ package com.example.fiftypoints.controllers;
 
 import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
-import com.example.fiftypoints.models.MachineModel;
 import com.example.fiftypoints.views.DrawCard;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
@@ -19,9 +18,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
-
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
@@ -37,7 +34,7 @@ public class GameController {
     private String cardNumber;
 
     @FXML
-    private Label playerUsername, sumOfPoints;
+    private Label playerUsername, sumOfPoints, state;
 
     @FXML
     private GridPane playerGrid, machinesGrid, gameGrid, deckGrid;
@@ -181,19 +178,26 @@ public class GameController {
 
     public void turnManagement(){
         if(gameModel.deck.getDeck() == null){
-            gameModel.resetDeck();
+            state.setText("Shuffle the cards");
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            pause.setOnFinished(event -> {
+                gameModel.resetDeck();
+            });
+            pause.play();
         }
         if(playerTurn){
             takeCard.setDisable(false);
             throwCard.setDisable(false);
+            state.setText("Your turn");
         } else{
             takeCard.setDisable(true);
             throwCard.setDisable(true);
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            PauseTransition pause = new PauseTransition(Duration.seconds(3));
 
             pause.setOnFinished(event -> {
                 if(machine){
+                    state.setText("Machine 1 turn");
                     CardModel card = gameModel.machine.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
@@ -210,6 +214,7 @@ public class GameController {
                     setCard();
                     turnManagement();
                 } else if (machine2) {
+                    state.setText("Machine 2 turn");
                     CardModel card = gameModel.machineTwo.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
@@ -226,6 +231,7 @@ public class GameController {
                     setCard();
                     turnManagement();
                 } else if (machine3) {
+                    state.setText("Machine 3 turn");
                     CardModel card = gameModel.machineThree.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();

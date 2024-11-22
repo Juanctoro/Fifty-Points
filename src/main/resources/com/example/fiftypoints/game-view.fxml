@@ -61,6 +61,7 @@
             </GridPane>
          </children>
       </HBox>
+      <Label fx:id="state" alignment="CENTER" prefHeight="36.0" prefWidth="339.0" text="Your turn" textAlignment="CENTER" />
       <HBox fx:id="playerBox" alignment="CENTER" prefHeight="182.0" prefWidth="613.0">
          <children>
             <GridPane fx:id="playerGrid" alignment="CENTER">
