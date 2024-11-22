@@ -74,7 +74,7 @@ public class GameController {
             index = new int[]{3, 8};
         }
         for (CardModel[] cards : handsList) {
-            setCardsGrid(cards, machinesGrid, index[aux]);
+            setCardsGridMachine(cards, machinesGrid, index[aux]);
             aux++;
         }
     }
@@ -82,6 +82,25 @@ public class GameController {
     public void setCardsGrid (CardModel[] cards, GridPane grid, int index){
         for (CardModel card : cards) {
             Group cardGroup = cardDraw.drawCard(card.getNumber(), card.getSuits());
+            grid.add(cardGroup, index, 0);
+            GridPane.setRowSpan(cardGroup, 2);
+            GridPane.setHalignment(cardGroup, HPos.CENTER);
+            GridPane.setValignment(cardGroup, VPos.CENTER);
+
+            index++;
+        }
+    }
+
+    public void setCardsGridMachine (CardModel[] cards, GridPane grid, int index){
+        for (CardModel card : cards) {
+            int num = random.nextInt(2);
+            String color;
+            if(num == 0){
+                color  = "red";
+            } else {
+                color  = "black";
+            }
+            Group cardGroup = cardDraw.drawCardBack(color);
             grid.add(cardGroup, index, 0);
             GridPane.setRowSpan(cardGroup, 2);
             GridPane.setHalignment(cardGroup, HPos.CENTER);
@@ -194,14 +213,20 @@ public class GameController {
             throwCard.setDisable(true);
 
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            if(machine){
+                state.setText("Machine 1 turn");
+            } else if (machine2){
+                state.setText("Machine 2 turn");
+            } else if (machine3){
+                state.setText("Machine 3 turn");
+            }
 
             pause.setOnFinished(event -> {
                 if(machine){
-                    state.setText("Machine 1 turn");
                     CardModel card = gameModel.machine.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
-                    sumOfPoints.setText(String.valueOf(points));
+                    sumOfPoints.setText("POINTS: " + points);
                     CardModel cardForSet = gameModel.startCard();
                     gameModel.machine.setCards(cardForSet, gameModel.machine.getIndex());
                     System.out.println("Carta 1");
@@ -214,11 +239,10 @@ public class GameController {
                     setCard();
                     turnManagement();
                 } else if (machine2) {
-                    state.setText("Machine 2 turn");
                     CardModel card = gameModel.machineTwo.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
-                    sumOfPoints.setText(String.valueOf(points));
+                    sumOfPoints.setText("POINTS: " + points);
                     CardModel cardForSet = gameModel.startCard();
                     gameModel.machineTwo.setCards(cardForSet, gameModel.machineTwo.getIndex());
                     System.out.println("Carta 2");
@@ -231,11 +255,10 @@ public class GameController {
                     setCard();
                     turnManagement();
                 } else if (machine3) {
-                    state.setText("Machine 3 turn");
                     CardModel card = gameModel.machineThree.throwCard(points);
                     this.cardNumber = card.getNumber();
                     points += setNumber();
-                    sumOfPoints.setText(String.valueOf(points));
+                    sumOfPoints.setText("POINTS: " + points);
                     CardModel cardForSet = gameModel.startCard();
                     gameModel.machineThree.setCards(cardForSet, gameModel.machineThree.getIndex());
                     System.out.println("Carta 3");
