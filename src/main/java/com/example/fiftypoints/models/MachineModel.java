@@ -36,8 +36,11 @@ public class MachineModel {
             }
             if (subtract && position > 40) {
                 removeCard(this.index);
+                System.out.println("Se elimina la acrat de letra");
                 return card;
             } else if (number + position <= 50) {
+                removeCard(this.index);
+                System.out.println("Se elimina la acrat de numero");
                 return card;
             }
             this.index++;

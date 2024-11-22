@@ -34,7 +34,7 @@ public class DeckModel {
     }
 
     public ArrayList<CardModel> getNewDeck() {
-        return validCards;
+        return cards;
     }
 
     public void setDeck(ArrayList<CardModel> deck) {

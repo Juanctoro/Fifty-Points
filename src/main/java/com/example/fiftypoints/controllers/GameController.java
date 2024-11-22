@@ -180,11 +180,9 @@ public class GameController {
     }
 
     public void turnManagement(){
-        ArrayList<CardModel> cards = gameModel.deck.getDeck();
-        if(cards.isEmpty()){
-            deckGrid.add(null, 0, 0);
+        if(gameModel.deck.getDeck() == null){
+            gameModel.resetDeck();
         }
-
         if(playerTurn){
             takeCard.setDisable(false);
             throwCard.setDisable(false);
@@ -192,7 +190,9 @@ public class GameController {
             takeCard.setDisable(true);
             throwCard.setDisable(true);
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(3));
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+
+            pause.setOnFinished(event -> {
                 if(machine){
                     CardModel card = gameModel.machine.throwCard(points);
                     this.cardNumber = card.getNumber();
@@ -200,6 +200,7 @@ public class GameController {
                     sumOfPoints.setText(String.valueOf(points));
                     CardModel cardForSet = gameModel.startCard();
                     gameModel.machine.setCards(cardForSet, gameModel.machine.getIndex());
+                    System.out.println("Carta 1");
                     if(gameModel.getMachines() > 1){
                         machine2 = true;
                     } else {
@@ -208,7 +209,6 @@ public class GameController {
                     machine = false;
                     setCard();
                     turnManagement();
-                    System.out.println("Carta 1");
                 } else if (machine2) {
                     CardModel card = gameModel.machineTwo.throwCard(points);
                     this.cardNumber = card.getNumber();
@@ -216,6 +216,7 @@ public class GameController {
                     sumOfPoints.setText(String.valueOf(points));
                     CardModel cardForSet = gameModel.startCard();
                     gameModel.machineTwo.setCards(cardForSet, gameModel.machineTwo.getIndex());
+                    System.out.println("Carta 2");
                     if(gameModel.getMachines() > 2){
                         machine3 = true;
                     } else {
@@ -224,7 +225,6 @@ public class GameController {
                     machine2 = false;
                     setCard();
                     turnManagement();
-                    System.out.println("Carta 2");
                 } else if (machine3) {
                     CardModel card = gameModel.machineThree.throwCard(points);
                     this.cardNumber = card.getNumber();
@@ -232,12 +232,13 @@ public class GameController {
                     sumOfPoints.setText(String.valueOf(points));
                     CardModel cardForSet = gameModel.startCard();
                     gameModel.machineThree.setCards(cardForSet, gameModel.machineThree.getIndex());
+                    System.out.println("Carta 3");
                     playerTurn = true;
                     machine3 = false;
                     setCard();
                     turnManagement();
-                    System.out.println("Carta 3");
                 }
+            });
             pause.play();
         }
     }

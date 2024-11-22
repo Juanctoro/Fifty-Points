@@ -1,6 +1,7 @@
 package com.example.fiftypoints.models;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -51,20 +52,30 @@ public class GameModel {
     }
 
     public CardModel startCard() {
-        Random random = new Random();
         ArrayList<CardModel> cards = deck.getDeck();
-        if (cards.size() == 1){
-            lastCard = cards.get(0);
-        }
+
         if (cards.isEmpty()) {
             resetDeck();
-            startCard();
+            System.out.println("Deck is reset");
+            cards = deck.getDeck();
+            if (cards.isEmpty()) {
+                throw new IllegalStateException("La baraja está vacía incluso después de resetear.");
+            }
         }
 
+        if (cards.size() == 1) {
+            lastCard = cards.get(0);
+            System.out.println("last card: " + lastCard);
+        }
+
+        Random random = new Random();
         int num = random.nextInt(cards.size());
         CardModel selectedCard = cards.get(num);
+
         deck.subtractCard(selectedCard);
-        cards.remove(num);
+        if (cards.contains(selectedCard)) {
+            cards.remove(num);
+        }
 
         return selectedCard;
     }
@@ -72,16 +83,33 @@ public class GameModel {
     public void resetDeck() {
         ArrayList<CardModel> fullDeck = deck.getNewDeck();
         ArrayList<CardModel> remainingCards = new ArrayList<>(fullDeck);
-        remainingCards.removeAll(List.of(player.getCards()));
-        remainingCards.removeAll(List.of(machine.getHand()));
-        if(machines > 2){
-            remainingCards.removeAll(List.of(machineTwo.getHand()));
-            remainingCards.removeAll(List.of(machineThree.getHand()));
-        } else if (machines > 1) {
-            remainingCards.removeAll(List.of(machineTwo.getHand()));
+
+        if (player.getCards() != null) {
+            remainingCards.removeAll(new ArrayList<>(Arrays.asList(player.getCards())));
         }
 
-        remainingCards.remove(lastCard);
+        if (machine.getHand() != null) {
+            remainingCards.removeAll(new ArrayList<>(Arrays.asList(machine.getHand())));
+        }
+
+        if (machines > 2) {
+            if (machineTwo.getHand() != null) {
+                remainingCards.removeAll(new ArrayList<>(Arrays.asList(machineTwo.getHand())));
+            }
+            if (machineThree.getHand() != null) {
+                remainingCards.removeAll(new ArrayList<>(Arrays.asList(machineThree.getHand())));
+            }
+        } else if (machines > 1) {
+            if (machineTwo.getHand() != null) {
+                remainingCards.removeAll(new ArrayList<>(Arrays.asList(machineTwo.getHand())));
+            }
+        }
+
+        if (lastCard != null) {
+            remainingCards.remove(lastCard);
+        }
+
         deck.setDeck(remainingCards);
     }
+
 }
