@@ -16,7 +16,7 @@
 #welcomeTittle{
     -fx-font-family: "Fruktur";
     -fx-text-fill: #000;
-    -fx-font-size: 3.7em;
+    -fx-font-size: 4.5em;
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
 }
 

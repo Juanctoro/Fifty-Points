@@ -124,7 +124,7 @@ public class GameController {
         } else {
             this.points = Integer.parseInt(startCart.getNumber());
         }
-        String number = "Points " + this.points;
+        String number = "Points: " + this.points;
         sumOfPoints.setText(number);
         Group cardGroup = cardDraw.drawCard(startCart.getNumber(), startCart.getSuits());
         gameGrid.add(cardGroup, 0, 0);
@@ -225,11 +225,15 @@ public class GameController {
                 if(machine && !lossPlayer[1]){
                     CardModel card = gameModel.machine.throwCard(points);
                     this.cardNumber = card.getNumber();
+                    System.out.println(cardNumber);
+                    System.out.println(points);
                     points += setNumber();
+                    System.out.println(points);
                     sumOfPoints.setText("Points: " + points);
-                    CardModel[] cardForSet = {gameModel.startCard()};
-                    gameModel.machine.setCards(cardForSet[0], gameModel.machine.getIndex());
-                    setCardsGrid(cardForSet, gameGrid,0);
+                    CardModel cardForSet = gameModel.startCard();
+                    gameModel.machine.setCards(cardForSet, gameModel.machine.getIndex());
+                    CardModel[] aux = {card};
+                    setCardsGrid(aux, gameGrid,0);
                     System.out.println("Carta 1");
                     if(loss(machine)){
                         lossPlayer[1] = true;
@@ -245,11 +249,15 @@ public class GameController {
                 } else if (machine2 && !lossPlayer[2]) {
                     CardModel card = gameModel.machineTwo.throwCard(points);
                     this.cardNumber = card.getNumber();
+                    System.out.println(cardNumber);
+                    System.out.println(points);
                     points += setNumber();
+                    System.out.println(points);
                     sumOfPoints.setText("Points: " + points);
                     CardModel[] cardForSet = {gameModel.startCard()};
                     gameModel.machineTwo.setCards(cardForSet[0], gameModel.machineTwo.getIndex());
-                    setCardsGrid(cardForSet, gameGrid,0);
+                    CardModel[] aux = {card};
+                    setCardsGrid(aux, gameGrid,0);
                     System.out.println("Carta 2");
                     if(loss(machine2)){
                         lossPlayer[2] = true;
@@ -265,11 +273,15 @@ public class GameController {
                 } else if (machine3 && !lossPlayer[3]) {
                     CardModel card = gameModel.machineThree.throwCard(points);
                     this.cardNumber = card.getNumber();
+                    System.out.println(cardNumber);
+                    System.out.println(points);
                     points += setNumber();
+                    System.out.println(points);
                     sumOfPoints.setText("Points: " + points);
                     CardModel[] cardForSet = {gameModel.startCard()};
                     gameModel.machineThree.setCards(cardForSet[0], gameModel.machineThree.getIndex());
-                    setCardsGrid(cardForSet, gameGrid,0);
+                    CardModel[] aux = {card};
+                    setCardsGrid(aux, gameGrid,0);
                     System.out.println("Carta 3");
                     playerTurn = true;
                     machine3 = false;
