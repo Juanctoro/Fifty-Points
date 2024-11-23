@@ -2,7 +2,9 @@ package com.example.fiftypoints.controllers;
 
 import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
+import com.example.fiftypoints.models.MachineModel;
 import com.example.fiftypoints.views.DrawCard;
+import com.example.fiftypoints.views.ExitView;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -19,6 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -197,44 +201,44 @@ public class GameController {
         return null;
     }
 
-    public void turnManagement(){
-        if(gameModel.deck.getDeck() == null){
+    public void stop(){
+        System.out.println("stop");
+    }
+
+    public void turnManagement() {
+        if (gameModel.deck.getDeck() == null) {
             state.setText("Shuffle the cards");
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
             pause.setOnFinished(event -> gameModel.resetDeck());
             pause.play();
         }
-        if(playerTurn && !lossPlayer[0]){
+
+        if (playerTurn && !lossPlayer[0]) {
+            if (loss(true)) {
+                stop();
+            }
             takeCard.setDisable(false);
             throwCard.setDisable(false);
             state.setText("Your turn");
-        } else{
+        } else {
             takeCard.setDisable(true);
             throwCard.setDisable(true);
 
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
-            if(machine){
+            if (machine) {
                 state.setText("Machine 1 turn");
-            } else if (machine2){
+            } else if (machine2) {
                 state.setText("Machine 2 turn");
-            } else if (machine3){
+            } else if (machine3) {
                 state.setText("Machine 3 turn");
             }
 
             pause.setOnFinished(event -> {
-                if(machine && !lossPlayer[1]){
-                    CardModel card = gameModel.machine.throwCard(points);
-                    this.cardNumber = card.getNumber();
-                    System.out.println(cardNumber);
-                    System.out.println(points);
-                    points += setNumber();
-                    System.out.println(points);
-                    sumOfPoints.setText("Points: " + points);
-                    CardModel cardForSet = gameModel.startCard();
-                    gameModel.machine.setCards(cardForSet, gameModel.machine.getIndex());
-                    CardModel[] aux = {card};
-                    setCardsGrid(aux, gameGrid,0);
-                    System.out.println("Carta 1");
+                if (machine && !lossPlayer[1]) {
+                    if (loss(false)) { // Verifica si la máquina 3 perdió
+                        return;
+                    }
+                    handleMachineTurn(gameModel.machine, 1);
                     if(loss(machine)){
                         lossPlayer[1] = true;
                     }
@@ -247,18 +251,10 @@ public class GameController {
                     setCard();
                     turnManagement();
                 } else if (machine2 && !lossPlayer[2]) {
-                    CardModel card = gameModel.machineTwo.throwCard(points);
-                    this.cardNumber = card.getNumber();
-                    System.out.println(cardNumber);
-                    System.out.println(points);
-                    points += setNumber();
-                    System.out.println(points);
-                    sumOfPoints.setText("Points: " + points);
-                    CardModel[] cardForSet = {gameModel.startCard()};
-                    gameModel.machineTwo.setCards(cardForSet[0], gameModel.machineTwo.getIndex());
-                    CardModel[] aux = {card};
-                    setCardsGrid(aux, gameGrid,0);
-                    System.out.println("Carta 2");
+                    if (loss(false)) { // Verifica si la máquina 3 perdió
+                        return;
+                    }
+                    handleMachineTurn(gameModel.machineTwo, 2);
                     if(loss(machine2)){
                         lossPlayer[2] = true;
                     }
@@ -271,30 +267,37 @@ public class GameController {
                     setCard();
                     turnManagement();
                 } else if (machine3 && !lossPlayer[3]) {
-                    CardModel card = gameModel.machineThree.throwCard(points);
-                    this.cardNumber = card.getNumber();
-                    System.out.println(cardNumber);
-                    System.out.println(points);
-                    points += setNumber();
-                    System.out.println(points);
-                    sumOfPoints.setText("Points: " + points);
-                    CardModel[] cardForSet = {gameModel.startCard()};
-                    gameModel.machineThree.setCards(cardForSet[0], gameModel.machineThree.getIndex());
-                    CardModel[] aux = {card};
-                    setCardsGrid(aux, gameGrid,0);
-                    System.out.println("Carta 3");
+                    if (loss(false)) { // Verifica si la máquina 3 perdió
+                        return;
+                    }
+                    handleMachineTurn(gameModel.machineThree, 3);
                     playerTurn = true;
                     machine3 = false;
                     setCard();
-                    if(loss(machine3)){
-                        lossPlayer[3] = true;
-                    }
                     turnManagement();
                 }
             });
             pause.play();
         }
+
+        win();
     }
+
+    private void handleMachineTurn(MachineModel machine, int machineIndex) {
+        CardModel card = machine.throwCard(points);
+        this.cardNumber = card.getNumber();
+        points += setNumber();
+        sumOfPoints.setText("Points: " + points);
+        CardModel cardForSet = gameModel.startCard();
+        machine.setCards(cardForSet, machine.getIndex());
+        CardModel[] aux = {card};
+        setCardsGrid(aux, gameGrid, 0);
+
+        if (loss(true)) {
+            lossPlayer[machineIndex] = true;
+        }
+    }
+
 
     public void setTurnMachines(){
         int machines = gameModel.getMachines();
@@ -365,7 +368,7 @@ public class GameController {
     private int setNumber(){
         int number;
         if(Objects.equals(cardNumber, "J") || Objects.equals(cardNumber, "Q") || Objects.equals(cardNumber, "K")){
-            number = -10;
+            number = 10;
             return number;
         } else if (Objects.equals(cardNumber, "9")) {
             number = 0;
@@ -379,16 +382,51 @@ public class GameController {
         }
     }
 
-    private boolean loss(boolean player){
-        if(points > 50){
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Information");
-            alert.setHeaderText(null);
-            alert.setContentText("Hola" + player);
-            alert.showAndWait();
+    private boolean loss(boolean isPlayer) {
+        if (points > 50) {
+            Platform.runLater(() -> {
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Game Over");
+                alert.setHeaderText(null);
+
+                if (isPlayer) {
+                    alert.setContentText("Player has lost! Points exceeded 50.");
+                    playerTurn = false;
+                    lossPlayer[0] = true;
+                } else {
+                    alert.setContentText("A machine has lost! Points exceeded 50.");
+                    if (!lossPlayer[1]) lossPlayer[1] = true;
+                    else if (!lossPlayer[2]) lossPlayer[2] = true;
+                    else if (!lossPlayer[3]) lossPlayer[3] = true;
+                }
+
+                alert.showAndWait();
+            });
 
             return true;
         }
         return false;
+    }
+
+    private void win() {
+        boolean allMachinesLost = true;
+
+        for (int i = 1; i <= gameModel.getMachines(); i++) {
+            if (!lossPlayer[i]) {
+                allMachinesLost = false;
+                break;
+            }
+        }
+
+        if (allMachinesLost && !lossPlayer[0]) {
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Victory!");
+            alert.setHeaderText(null);
+            alert.setContentText("Congratulations! You have won the game!");
+            alert.showAndWait();
+
+            takeCard.setDisable(true);
+            throwCard.setDisable(true);
+        }
     }
 }

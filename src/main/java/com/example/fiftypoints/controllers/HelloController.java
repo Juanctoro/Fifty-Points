@@ -1,5 +1,6 @@
 package com.example.fiftypoints.controllers;
 
+import com.example.fiftypoints.views.ExitView;
 import com.example.fiftypoints.views.GameView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
