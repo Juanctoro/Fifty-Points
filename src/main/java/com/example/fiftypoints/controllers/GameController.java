@@ -33,7 +33,7 @@ public class GameController {
     private int colum = 0;
     private Group group;
     private String cardNumber;
-    private boolean[] lossPlayer = {false, false, false, false};
+    private final boolean[] lossPlayer = {false, false, false, false};
 
     @FXML
     private Label playerUsername, sumOfPoints, state;
@@ -94,7 +94,7 @@ public class GameController {
     }
 
     public void setCardsGridMachine (CardModel[] cards, GridPane grid, int index){
-        for (CardModel card : cards) {
+        for (CardModel ignored : cards) {
             int num = random.nextInt(2);
             String color;
             if(num == 0){
@@ -124,7 +124,7 @@ public class GameController {
         } else {
             this.points = Integer.parseInt(startCart.getNumber());
         }
-        String number = "POINTS " + this.points;
+        String number = "Points " + this.points;
         sumOfPoints.setText(number);
         Group cardGroup = cardDraw.drawCard(startCart.getNumber(), startCart.getSuits());
         gameGrid.add(cardGroup, 0, 0);
@@ -201,9 +201,7 @@ public class GameController {
         if(gameModel.deck.getDeck() == null){
             state.setText("Shuffle the cards");
             PauseTransition pause = new PauseTransition(Duration.seconds(3));
-            pause.setOnFinished(event -> {
-                gameModel.resetDeck();
-            });
+            pause.setOnFinished(event -> gameModel.resetDeck());
             pause.play();
         }
         if(playerTurn && !lossPlayer[0]){

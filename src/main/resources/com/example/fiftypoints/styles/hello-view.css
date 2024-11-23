@@ -1,10 +1,8 @@
-@font-face {
-    font-family: 'Chewy';
-    src: url("../fonts/Chewy-Regular.ttf");
-}
+@import url('https://fonts.googleapis.com/css2?family=Fruktur:ital@0;1&family=Rye&display=swap');
+
 #background{
     -fx-background-color: fff;
-    -fx-background-image: url("../images/smooth-green-background.jpg");
+    -fx-background-image: url("../images/background.jpg");
 }
 
 #card {
@@ -16,15 +14,15 @@
 }
 
 #welcomeTittle{
-    -fx-font-family: "Chewy";
+    -fx-font-family: "Fruktur";
     -fx-text-fill: #000;
-    -fx-font-size: 5em;
+    -fx-font-size: 3.7em;
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
 }
 
 #buttonPlay {
-    -fx-font-size: 20px;
-    -fx-font-family: "Chewy";
+    -fx-font-size: 2em;
+    -fx-font-family: "Fruktur";
     -fx-text-transform: uppercase;
     -fx-letter-spacing: 2.5px;
     -fx-font-weight: 500;
@@ -50,8 +48,17 @@
     -fx-translate-y: -1px;
 }
 
+#labelUsername, #howManyMachines, #oneMachine, #twoMachine, #threeMachine, #instructions {
+    -fx-text-fill: #000;
+    -fx-font-family: "Fruktur";
+}
+
 #labelUsername, #howManyMachines, #oneMachine, #twoMachine, #threeMachine {
-    -fx-font-family: Chewy;
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 8);
+}
+
+#labelUsername, #howManyMachines {
+    -fx-font-size: 2em;
 }
 
 #inputUsername{
@@ -61,6 +68,8 @@
     -fx-padding: 1em;
     -fx-effect: innershadow(gaussian, rgba(0, 0, 0, 0.3), 5, 0.0, 2, 5);
     -fx-transition: 300ms ease-in-out;
+    -fx-font-family: "Fruktur";
+    -fx-font-size: 1.4em;
 }
 
 #inputUsername:focused {
@@ -72,9 +81,15 @@
 
 #instructions {
     -fx-background-color: #e0e0e0;
+    -fx-font-size: 1.4em;
     -fx-text-fill: #000;
 }
 
 #instructions:hover{
-    -fx-text-fill: #0769ff;-fx-font-size: 1.1em;
+    -fx-text-fill: #20ff07;
+    -fx-font-size: 1.45em;
+}
+
+#instructions .text {
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 4, 0.5, 2, 2);
 }

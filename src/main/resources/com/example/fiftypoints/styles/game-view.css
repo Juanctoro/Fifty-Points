@@ -1,14 +1,11 @@
-@font-face {
-    font-family: 'Chewy';
-    src: url("../fonts/Chewy-Regular.ttf");
-}
+@import url('https://fonts.googleapis.com/css2?family=Fruktur:ital@0;1&family=Rye&display=swap');
 
 #background {
-    -fx-background-image: url("../images/smooth-green-background.jpg");
+    -fx-background-image: url("../images/background.jpg");
 }
 
 #labelTittle {
-    -fx-font-family: "Chewy";
+    -fx-font-family: "Fruktur";
     -fx-text-fill: #fff;
     -fx-font-size: 5em;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4);
@@ -22,7 +19,7 @@
 
 #throwCard, #takeCard{
     -fx-font-size: 15px;
-    -fx-font-family: "Chewy";
+    -fx-font-family: "Fruktur";
     -fx-text-transform: uppercase;
     -fx-letter-spacing: 2.5px;
     -fx-font-weight: 500;
@@ -49,7 +46,7 @@
 }
 
 #state, #sumOfPoints, #playerUsername {
-    -fx-font-family: Chewy;
+    -fx-font-family: "Fruktur";
     -fx-font-size: 3em;
     -fx-text-fill: #fff;
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4);

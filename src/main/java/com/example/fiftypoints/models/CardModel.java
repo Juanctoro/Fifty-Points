@@ -16,9 +16,4 @@ public class CardModel {
     public String getSuits() {
         return suit;
     }
-
-    public void printCard() {
-        System.out.println(number);
-        System.out.println(suit);
-    }
 }

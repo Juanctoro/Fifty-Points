@@ -20,12 +20,12 @@ public class MachineModel {
                     number = 0;
                 }
             } catch (NumberFormatException ignored) {
-                subtract = true;
                 switch (card.getNumber()) {
                     case "J":
                     case "Q":
                     case "K":
                         number = 10;
+                        subtract = true;
                         break;
                     case "A":
                         number = (position + 10 <= 50) ? 10 : 1;
@@ -36,11 +36,9 @@ public class MachineModel {
             }
             if (subtract && position > 40) {
                 removeCard(this.index);
-                System.out.println("Se elimina la acrat de letra");
                 return card;
             } else if (number + position <= 50) {
                 removeCard(this.index);
-                System.out.println("Se elimina la acrat de numero");
                 return card;
             }
             this.index++;
@@ -52,9 +50,8 @@ public class MachineModel {
         return cards;
     }
 
-    public CardModel[] removeCard(int Colum) {
+    public void removeCard(int Colum) {
         this.cards[Colum] = null;
-        return cards;
     }
 
     public void setCards(CardModel card, int colum) {

@@ -21,6 +21,9 @@ public class HelloController {
     public Button buttonPlay;
 
     public void initialize() {
+        oneMachine.setStyle("-fx-font-size: 16px;");
+        twoMachine.setStyle("-fx-font-size: 16px;");
+        threeMachine.setStyle("-fx-font-size: 16px;");
         ToggleGroup toggleGroup = new ToggleGroup();
         oneMachine.setToggleGroup(toggleGroup);
         twoMachine.setToggleGroup(toggleGroup);
