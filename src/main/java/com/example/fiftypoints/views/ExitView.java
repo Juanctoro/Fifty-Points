@@ -28,31 +28,7 @@ public class ExitView extends Stage {
         this.show();
     }
 
-    /**
-     * Holds the single instance of GameView, following the Singleton pattern.
-     */
-    private static class ExitViewHolder {
-        private static ExitView INSTANCE;
-    }
-
-    /**
-     * Provides access to the single instance of GameView.
-     * If the instance does not exist, it is created; otherwise, the existing
-     * instance is returned.
-     *
-     * @return the singleton instance of GameView
-     * @throws IOException if there is an issue loading the FXML file
-     */
-    public static ExitView getInstance() throws IOException {
-
-        if (ExitView.ExitViewHolder.INSTANCE == null) {
-            return ExitView.ExitViewHolder.INSTANCE = new ExitView();
-        } else {
-            return ExitView.ExitViewHolder.INSTANCE;
-        }
-    }
-
-    public ExitController getGameController() {
-        return exitController;
+    public ExitController getExitController() throws IOException {
+        return this.exitController;
     }
 }

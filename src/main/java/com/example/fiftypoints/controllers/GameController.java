@@ -12,7 +12,6 @@ import javafx.geometry.HPos;
 import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
-import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
@@ -20,19 +19,20 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.util.Duration;
-
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.Random;
 
 public class GameController {
     private GameModel gameModel;
-    private final DrawCard cardDraw = new DrawCard();
+    private DrawCard cardDraw;
     private int points;
-    private boolean playerTurn = true;
+    private String username;
+    private boolean playerTurn;
     private boolean[] machine;
     private final Random random = new Random();
     private int colum = 0;
@@ -42,13 +42,7 @@ public class GameController {
     private boolean gameOver = false;
 
     @FXML
-    private Label playerUsername;
-    @FXML
-    private Label sumOfPoints;
-    @FXML
-    public Label state;
-    @FXML
-    private Label machineLoss;
+    private Label playerUsername, state, sumOfPoints, machineLoss;
 
     @FXML
     private GridPane playerGrid, machinesGrid, gameGrid, deckGrid;
@@ -58,8 +52,12 @@ public class GameController {
 
     @FXML
     public void initialize(String username, int machines) {
+        this.playerTurn = true;
+        machinesGrid.getChildren().clear();
+        this.cardDraw = new DrawCard();
         this.gameModel = new GameModel(machines);
         this.gameOver = false;
+        this.username = username;
         playerUsername.setText(username);
         CardModel[] handPlayer = gameModel.player.getCards();
         setCardsGrid(handPlayer, playerGrid, 0);
@@ -70,6 +68,8 @@ public class GameController {
     }
 
     public void initializeMachines (){
+        int aux = 0;
+        int[] index = {0, 5, 10};
         ArrayList<CardModel[]> handsList = new ArrayList<>();
         if(gameModel.getMachines() == 1){
             handsList.add(gameModel.machine.getHand());
@@ -81,8 +81,7 @@ public class GameController {
             handsList.add(gameModel.machineTwo.getHand());
             handsList.add(gameModel.machineThree.getHand());
         }
-        int aux = 0;
-        int[] index = {0, 5, 10};
+
         if(gameModel.getMachines() == 1){
             index = new int[]{5};
         } else if(gameModel.getMachines() == 2){
@@ -289,7 +288,6 @@ public class GameController {
             } else {
                 this.playerTurn = true;
             }
-            System.out.println(Arrays.toString(lossPlayer));
             turnManagement();
             isLoss();
         } else {
@@ -348,9 +346,7 @@ public class GameController {
 
     public void throwCard(){
         throwCard.setDisable(true);
-        System.out.println(points);
         points += setNumber();
-        System.out.println(points);
         gameGrid.add(this.group, 0, 0);
         gameModel.player.throwCard(this.colum);
         removeCardHand(this.colum);
@@ -364,7 +360,6 @@ public class GameController {
             if (gameModel.deck.getDeck().size() == 1) {
                 ArrayList<CardModel> cards = gameModel.deck.getDeck();
                 gameModel.lastCard = cards.get(0);
-                System.out.println("last card: " + gameModel.lastCard);
             }
             takeCard();
             turnManagement();
@@ -424,11 +419,11 @@ public class GameController {
         if (allMachinesLost && !lossPlayer[0]) {
             gameOver = true;
             Platform.runLater(() -> {
-                Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                alert.setTitle("Victory!");
-                alert.setHeaderText(null);
-                alert.setContentText("Congratulations! You have won the game!");
-                alert.showAndWait();
+                try {
+                    exitView(false);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
             });
             throwCard.setDisable(true);
         }
@@ -483,10 +478,24 @@ public class GameController {
         throwCard.setDisable(true);
         playerTurn = false;
         try {
-            ExitView.getInstance();
+            exitView(this.gameOver);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
         return true;
+    }
+
+    private void exitView(boolean game) throws IOException {
+        ExitView exitView = new ExitView();
+        exitView.setOnHiding(event -> {
+            for (Window window : Stage.getWindows()) {
+                if (window.isShowing()) {
+                    window.hide();
+                }
+            }
+        });
+        exitView.show();
+        ExitController exitViewController = exitView.getExitController();
+        exitViewController.initialize(game, this.username);
     }
 }
