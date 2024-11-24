@@ -1,8 +1,10 @@
 package com.example.fiftypoints.models;
 
+import com.example.fiftypoints.interfaces.IDeck;
+
 import java.util.ArrayList;
 
-public class DeckModel {
+public class DeckModel implements IDeck {
     private final ArrayList<CardModel> cards;
     private ArrayList<CardModel> validCards;
 

@@ -281,7 +281,6 @@ public class GameController {
         }
         CardModel card = machine.throwCard(points);
         if(card == null){
-            machine.out();
             lossPlayer[machineIndex] = true;
             if(machineIndex <=2 ){
                 this.machine[machineIndex-1] = true;

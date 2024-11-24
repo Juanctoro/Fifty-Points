@@ -1,6 +1,8 @@
 package com.example.fiftypoints.models;
 
-public class CardModel {
+import com.example.fiftypoints.interfaces.ICard;
+
+public class CardModel implements ICard {
     String number;
     String suit;
 
@@ -9,10 +11,12 @@ public class CardModel {
         this.suit = suit;
     }
 
+    @Override
     public String getNumber() {
         return number;
     }
 
+    @Override
     public String getSuits() {
         return suit;
     }

@@ -1,6 +1,8 @@
 package com.example.fiftypoints.models;
 
-public class MachineModel {
+import com.example.fiftypoints.interfaces.IMachine;
+
+public class MachineModel implements IMachine {
     CardModel[] cards;
     private int index = 0;
 
@@ -60,12 +62,5 @@ public class MachineModel {
 
     public int getIndex() {
         return index;
-    }
-
-    public void out(){
-        for (CardModel card : cards) {
-            System.out.println("number: " +card.getNumber());
-            System.out.println("suit: " + card.getSuits());
-        }
     }
 }
