@@ -9,9 +9,8 @@ public class PlayerModel {
     public CardModel[] getCards() {
         return cards;
     }
-    public CardModel[] throwCard(int Colum) {
+    public void throwCard(int Colum) {
         this.cards[Colum] = null;
-        return cards;
     }
 
     public void setCards(CardModel card, int colum) {

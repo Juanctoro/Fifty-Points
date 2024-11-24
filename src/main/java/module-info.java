@@ -5,6 +5,7 @@ module com.example.fiftypoints {
 
 
     opens com.example.fiftypoints to javafx.fxml;
+    exports com.example.fiftypoints.models;
     exports com.example.fiftypoints;
     exports com.example.fiftypoints.views;
     opens com.example.fiftypoints.views to javafx.fxml;

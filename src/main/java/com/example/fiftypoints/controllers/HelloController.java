@@ -1,5 +1,6 @@
 package com.example.fiftypoints.controllers;
 
+import com.example.fiftypoints.views.ExitView;
 import com.example.fiftypoints.views.GameView;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
@@ -21,6 +22,9 @@ public class HelloController {
     public Button buttonPlay;
 
     public void initialize() {
+        oneMachine.setStyle("-fx-font-size: 16px;");
+        twoMachine.setStyle("-fx-font-size: 16px;");
+        threeMachine.setStyle("-fx-font-size: 16px;");
         ToggleGroup toggleGroup = new ToggleGroup();
         oneMachine.setToggleGroup(toggleGroup);
         twoMachine.setToggleGroup(toggleGroup);

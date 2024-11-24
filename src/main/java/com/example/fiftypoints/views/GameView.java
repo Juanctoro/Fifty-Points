@@ -28,7 +28,7 @@ public class GameView extends Stage {
     public GameView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fiftypoints/game-view.fxml"));
         Parent root = loader.load();
-        this.setTitle("Naval Battle");
+        this.setTitle("Cincuentazo");
         this.gameController = loader.getController();
         Scene scene = new Scene(root);
         this.setScene(scene);

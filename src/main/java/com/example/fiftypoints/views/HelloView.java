@@ -17,7 +17,7 @@ public class HelloView extends Stage {
     public HelloView() throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/com/example/fiftypoints/hello-view.fxml"));
         Parent root = loader.load();
-        this.setTitle("Naval Battle");
+        this.setTitle("Cincuentazo");
         Scene scene = new Scene(root);
         this.setScene(scene);
         this.setResizable(false);
