@@ -61,4 +61,11 @@ public class MachineModel {
     public int getIndex() {
         return index;
     }
+
+    public void out(){
+        for (CardModel card : cards) {
+            System.out.println("number: " +card.getNumber());
+            System.out.println("suit: " + card.getSuits());
+        }
+    }
 }

@@ -38,6 +38,7 @@
             </GridPane>
          </children>
       </HBox>
+      <Label fx:id="machineLoss" alignment="CENTER" prefHeight="34.0" prefWidth="992.0" textAlignment="CENTER" />
       <HBox fx:id="gameBox" alignment="CENTER" fillHeight="false" prefHeight="302.0" prefWidth="690.0">
          <children>
             <GridPane fx:id="gameGrid" prefHeight="228.0" prefWidth="184.0">
@@ -83,10 +84,9 @@
                <children>
                   <Button fx:id="throwCard" mnemonicParsing="false" onAction="#throwCard" prefHeight="40.0" prefWidth="130.0" text="THROW CARD">
                      <VBox.margin>
-                        <Insets bottom="18.0" />
+                        <Insets />
                      </VBox.margin>
                   </Button>
-                  <Button fx:id="takeCard" mnemonicParsing="false" onAction="#takeCard" prefHeight="40.0" prefWidth="130.0" text="TAKE CARD" />
                </children>
             </VBox>
          </children>

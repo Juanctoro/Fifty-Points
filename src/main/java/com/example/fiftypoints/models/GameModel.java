@@ -13,7 +13,6 @@ public class GameModel {
     public DeckModel deck;
     public CardModel lastCard;
 
-
     public GameModel(int machines) {
         this.machines = machines;
         this.deck = new DeckModel();
@@ -54,10 +53,8 @@ public class GameModel {
         ArrayList<CardModel> cards = deck.getDeck();
         if (cards.isEmpty()) {
             resetDeck();
-            System.out.println("Deck is reset");
             cards = deck.getDeck();
         }
-
         if (cards.size() == 1) {
             lastCard = cards.get(0);
             System.out.println("last card: " + lastCard);
@@ -70,6 +67,12 @@ public class GameModel {
         deck.subtractCard(selectedCard);
         if (cards.contains(selectedCard)) {
             cards.remove(num);
+        }
+
+        cards = deck.getDeck();
+
+        if (cards.isEmpty()) {
+            resetDeck();
         }
 
         return selectedCard;
@@ -106,5 +109,4 @@ public class GameModel {
 
         deck.setDeck(remainingCards);
     }
-
 }

@@ -17,7 +17,7 @@
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.5), 10, 0.5, 0, 4);
 }
 
-#throwCard, #takeCard{
+#throwCard {
     -fx-font-size: 15px;
     -fx-font-family: "Fruktur";
     -fx-text-transform: uppercase;
@@ -34,7 +34,7 @@
     -fx-transition: background-color 0.7s ease, text-fill 0.7s ease, -fx-translate-y 0.7s ease, -fx-effect 0.7s ease;
 }
 
-#throwCard:hover, #takeCard:hover {
+#throwCard:hover {
     -fx-background-color: #46d02b;
     -fx-effect: dropshadow(one-pass-box, rgb(35, 112, 20), 15, 0.0, 0, 15);
     -fx-text-fill: #fff;
@@ -66,4 +66,10 @@
     -fx-border-color: #388e3c;
     -fx-border-radius: 10px;
     -fx-border-width: 2px;
+}
+
+#machineLoss {
+    -fx-font-family: "Fruktur";
+    -fx-font-size: 2em;
+    -fx-text-fill: #fff;
 }
