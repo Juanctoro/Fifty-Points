@@ -4,6 +4,7 @@ import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
 import com.example.fiftypoints.models.MachineModel;
 import com.example.fiftypoints.views.DrawCard;
+import com.example.fiftypoints.views.ExitView;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -20,6 +21,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -168,7 +171,6 @@ public class GameController {
                 Group clickedGroup = (Group) event.getSource();
                 Integer columnIndex = GridPane.getColumnIndex(clickedGroup);
 
-                // Restablecer los estilos de todas las cartas
                 for (Node n : playerGrid.getChildren()) {
                     if (n instanceof Group) {
                         for (Node child : ((Group) n).getChildren()) {
@@ -180,7 +182,6 @@ public class GameController {
                     }
                 }
 
-                // Aplicar estilo a la carta seleccionada
                 for (Node child : clickedGroup.getChildren()) {
                     if (child instanceof Rectangle) {
                         ((Rectangle) child).setStroke(Color.web("#2dff28"));
@@ -188,12 +189,10 @@ public class GameController {
                     }
                 }
 
-                // Obtener el número de carta de la carta seleccionada
                 this.cardNumber = getCardNumberFromGroup(clickedGroup);
                 this.group = clickedGroup;
                 this.colum = columnIndex;
 
-                // Habilitar el botón si se ha seleccionado una carta
                 if (this.cardNumber != null) {
                     throwCard.setDisable(false);
                 }
@@ -234,10 +233,13 @@ public class GameController {
         }
         if (playerTurn && !lossPlayer[0]) {
             state.setText("Your turn");
+            if(playerLoss()){
+                gameOver = true;
+            }
         } else {
             throwCard.setDisable(true);
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             turns();
 
             pause.setOnFinished(event -> {
@@ -326,6 +328,7 @@ public class GameController {
         }
         if (playerTurn) {
             state.setText("Your turn");
+            playerLoss();
         }
     }
 
@@ -355,7 +358,7 @@ public class GameController {
         setCard();
         this.playerTurn = false;
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
         pause.setOnFinished(event -> {
             this.machine[0] = true;
             if (gameModel.deck.getDeck().size() == 1) {
@@ -441,5 +444,49 @@ public class GameController {
             index++;
         }
         machineLoss.setText(text.toString());
+    }
+
+    private boolean playerLoss(){
+        for (CardModel card : gameModel.player.getCards()) {
+            int number;
+            boolean subtract = false;
+
+            try {
+                number = Integer.parseInt(card.getNumber());
+                if(number == 9) {
+                    number = 0;
+                }
+            } catch (NumberFormatException ignored) {
+                switch (card.getNumber()) {
+                    case "J":
+                    case "Q":
+                    case "K":
+                        number = 10;
+                        subtract = true;
+                        break;
+                    case "A":
+                        number = (this.points + 10 <= 50) ? 10 : 1;
+                        break;
+                    default:
+                        continue;
+                }
+            }
+            if (subtract && this.points > 40) {
+                return false;
+            } else if (number + this.points <= 50) {
+                return false;
+            }
+        }
+
+        gameOver = true;
+        this.lossPlayer[0] = true;
+        throwCard.setDisable(true);
+        playerTurn = false;
+        try {
+            ExitView.getInstance();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return true;
     }
 }
