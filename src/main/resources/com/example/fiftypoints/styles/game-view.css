@@ -73,3 +73,9 @@
     -fx-font-size: 2em;
     -fx-text-fill: #fff;
 }
+
+#a1, #a10 {
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 8);
+    -fx-text-fill: #fff;
+    -fx-font-family: "Fruktur";
+}

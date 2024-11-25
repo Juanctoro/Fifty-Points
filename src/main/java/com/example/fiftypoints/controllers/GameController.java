@@ -14,6 +14,8 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
@@ -40,6 +42,7 @@ public class GameController {
     private String cardNumber;
     private boolean[] lossPlayer = new boolean[4];
     private boolean gameOver = false;
+    private ToggleGroup toggleGroupA;
 
     @FXML
     private Label playerUsername, state, sumOfPoints, machineLoss;
@@ -49,6 +52,9 @@ public class GameController {
 
     @FXML
     private Button throwCard;
+
+    @FXML
+    private RadioButton a1, a10;
 
     @FXML
     public void initialize(String username, int machines) {
@@ -65,6 +71,11 @@ public class GameController {
         initializeCard();
         setCard();
         setTurnMachines();
+        this.toggleGroupA = new ToggleGroup();
+        a1.setStyle("-fx-font-size: 16px;");
+        a10.setStyle("-fx-font-size: 16px;");
+        a1.setToggleGroup(this.toggleGroupA);
+        a10.setToggleGroup(this.toggleGroupA);
     }
 
     public void initializeMachines (){
@@ -189,6 +200,15 @@ public class GameController {
                 }
 
                 this.cardNumber = getCardNumberFromGroup(clickedGroup);
+                if(Objects.equals(this.cardNumber, "A")) {
+                    a1.setVisible(true);
+                    a10.setVisible(true);
+                    throwCard.setDisable(false);
+                    RadioButton selected = (RadioButton) toggleGroupA.getSelectedToggle();
+                    if (selected != null) {
+                        throwCard.setDisable(true);
+                    }
+                }
                 this.group = clickedGroup;
                 this.colum = columnIndex;
 
@@ -238,7 +258,7 @@ public class GameController {
         } else {
             throwCard.setDisable(true);
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+            PauseTransition pause = new PauseTransition(Duration.seconds(2));
             turns();
 
             pause.setOnFinished(event -> {
@@ -353,7 +373,7 @@ public class GameController {
         setCard();
         this.playerTurn = false;
 
-        PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+        PauseTransition pause = new PauseTransition(Duration.seconds(2));
         pause.setOnFinished(event -> {
             this.machine[0] = true;
             if (gameModel.deck.getDeck().size() == 1) {
@@ -394,8 +414,16 @@ public class GameController {
             number = 0;
             return number;
         } else if (Objects.equals(cardNumber, "A")) {
-            number = 1;
-            return number;
+            if(playerTurn) {
+                RadioButton selected = (RadioButton) toggleGroupA.getSelectedToggle();
+                number = Integer.parseInt(selected.getText());
+                a1.setVisible(false);
+                a10.setVisible(false);
+                return number;
+            } else {
+                return (points + 10 <= 50) ? 10 : 1;
+            }
+
         } else {
             number = Integer.parseInt(cardNumber);
             return number;
