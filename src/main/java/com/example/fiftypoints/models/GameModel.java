@@ -1,5 +1,9 @@
 package com.example.fiftypoints.models;
 
+import com.example.fiftypoints.models.abstractModels.HandModelFactory;
+import com.example.fiftypoints.models.factoryModels.MachineModelFactory;
+import com.example.fiftypoints.models.factoryModels.PlayerModelFactory;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;

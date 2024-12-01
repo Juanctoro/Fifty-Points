@@ -62,7 +62,8 @@ public class GameController{
         this.machine = new boolean[machines];
         this.lossPlayer = new boolean[machines + 1];
         this.toggleGroupA = new ToggleGroup();
-
+        TurnsThread turns = new TurnsThread(this);
+        turns.start();
 
         setCardsGrid(gameFacade.getGameModel().player.getHand(), playerGrid, 0);
         initializeMachines();
@@ -212,15 +213,16 @@ public class GameController{
             return;
         }
         if (playerTurn && !lossPlayer[0]) {
-            state.setText("Your turn");
+            Platform.runLater(() -> state.setText("Your turn"));
             state.setDisable(false);
             if(playerLoss()){
                 gameOver = true;
             }
         } else {
             throwCard.setDisable(true);
+            Platform.runLater(() -> state.setText("Machine's turn"));
 
-            PauseTransition pause = new PauseTransition(Duration.seconds(2));
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> {
                 if (machine[0] && !lossPlayer[1]) {
                     handleMachineTurn(gameFacade.getGameModel().machine, 1);
@@ -426,10 +428,6 @@ public class GameController{
 
     public synchronized void setPlayerTurn(boolean isPlayerTurn) {
         this.playerTurn = isPlayerTurn;
-    }
-
-    public synchronized boolean getPlayerTurn() {
-        return this.playerTurn;
     }
 
     public synchronized boolean getGameOver() {

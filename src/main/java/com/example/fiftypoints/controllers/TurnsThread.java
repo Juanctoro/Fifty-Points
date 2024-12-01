@@ -1,22 +1,15 @@
 package com.example.fiftypoints.controllers;
 
-import javafx.application.Platform;
-
-public class Turns extends Thread {
+public class TurnsThread extends Thread {
     private final GameController gameController;
 
-    public Turns(GameController gameController) {
+    public TurnsThread(GameController gameController) {
         this.gameController = gameController;
     }
 
     public void run() {
         while (!gameController.getGameOver()) {
             executeBackgroundCalculations();
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -24,7 +17,6 @@ public class Turns extends Thread {
         synchronized (gameController) {
             boolean[] machine = gameController.getMachineState();
             boolean[] lossPlayer = gameController.getLossPlayerState();
-            boolean playerTurn = gameController.getPlayerTurn();
 
             for (int i = 0; i < machine.length; i++) {
                 if (machine[i]) {

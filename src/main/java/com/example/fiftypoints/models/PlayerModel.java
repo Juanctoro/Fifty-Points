@@ -1,6 +1,7 @@
 package com.example.fiftypoints.models;
 
 import com.example.fiftypoints.interfaces.IPlayer;
+import com.example.fiftypoints.models.abstractModels.HandModel;
 
 public class PlayerModel extends HandModel implements IPlayer {
 

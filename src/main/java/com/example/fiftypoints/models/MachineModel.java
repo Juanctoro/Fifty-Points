@@ -1,6 +1,7 @@
 package com.example.fiftypoints.models;
 
 import com.example.fiftypoints.interfaces.IMachine;
+import com.example.fiftypoints.models.abstractModels.HandModel;
 
 public class MachineModel extends HandModel implements IMachine {
     private int index = 0;
