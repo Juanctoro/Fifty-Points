@@ -4,7 +4,7 @@
     -fx-background-image: url("../images/background.jpg");
 }
 
-#playAgain, #exit {
+#playAgain, #exit, #play {
     -fx-font-size: 2em;
     -fx-font-family: "Fruktur";
     -fx-text-transform: uppercase;
@@ -21,14 +21,14 @@
     -fx-transition: background-color 0.7s ease, text-fill 0.7s ease, -fx-translate-y 0.7s ease, -fx-effect 0.7s ease;
 }
 
-#playAgain:hover, #exit:hover{
+#playAgain:hover, #exit:hover, #play:hover {
     -fx-background-color: #46d02b;
     -fx-effect: dropshadow(one-pass-box, rgb(35, 112, 20), 15, 0.0, 0, 15);
     -fx-text-fill: #fff;
     -fx-translate-y: -2px;
 }
 
-#playAgain:pressed, #exit:pressed {
+#playAgain:pressed, #exit:pressed, #play:pressed  {
     -fx-translate-y: -1px;
 }
 
@@ -37,4 +37,16 @@
     -fx-text-fill: #fff;
     -fx-font-size: 4.5em;
     -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.1), 8, 0.0, 0, 8);
+}
+
+#oneMachine, #twoMachine, #threeMachine {
+    -fx-effect: dropshadow(one-pass-box, rgba(0, 0, 0, 0.2), 8, 0.0, 0, 8);
+    -fx-text-fill: #fff;
+    -fx-font-family: "Fruktur";
+}
+
+#machinesLabel {
+    -fx-text-fill: #fff;
+    -fx-font-family: "Fruktur";
+    -fx-font-size: 2em;
 }

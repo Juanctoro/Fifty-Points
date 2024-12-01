@@ -1,19 +1,16 @@
 package com.example.fiftypoints.models;
 
-public class PlayerModel {
-    CardModel[] cards;
+import com.example.fiftypoints.interfaces.IPlayer;
+import com.example.fiftypoints.models.abstractModels.HandModel;
+
+public class PlayerModel extends HandModel implements IPlayer {
 
     public PlayerModel(CardModel[] cards) {
-        this.cards = cards;
-    }
-    public CardModel[] getCards() {
-        return cards;
-    }
-    public void throwCard(int Colum) {
-        this.cards[Colum] = null;
+        super(cards);
     }
 
-    public void setCards(CardModel card, int colum) {
-        this.cards[colum] = card;
+    public void throwCard(int Colum) {
+        cards[Colum] = null;
     }
+
 }
