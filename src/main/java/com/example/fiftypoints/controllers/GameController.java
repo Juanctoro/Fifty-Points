@@ -70,7 +70,8 @@ public class GameController {
         initializeMachines();
         initializeCard();
         setCard();
-        setTurnMachines();
+        this.machine = new boolean[machines];
+        this.lossPlayer = new boolean[machines + 1];
         this.toggleGroupA = new ToggleGroup();
         a1.setStyle("-fx-font-size: 16px;");
         a10.setStyle("-fx-font-size: 16px;");
@@ -99,7 +100,16 @@ public class GameController {
             index = new int[]{3, 8};
         }
         for (CardModel[] cards : handsList) {
-            setCardsGridMachine(cards, machinesGrid, index[aux]);
+            int indexCard = index[aux];
+            for (CardModel ignored : cards) {
+                String color = random.nextInt(2) == 0 ? "red" : "black";
+                Group cardGroup = cardDraw.drawCardBack(color);
+                machinesGrid.add(cardGroup, indexCard, 0);
+                GridPane.setRowSpan(cardGroup, 2);
+                GridPane.setHalignment(cardGroup, HPos.CENTER);
+                GridPane.setValignment(cardGroup, VPos.CENTER);
+                indexCard++;
+            }
             aux++;
         }
     }
@@ -107,25 +117,6 @@ public class GameController {
     public void setCardsGrid (CardModel[] cards, GridPane grid, int index){
         for (CardModel card : cards) {
             Group cardGroup = cardDraw.drawCard(card.getNumber(), card.getSuits());
-            grid.add(cardGroup, index, 0);
-            GridPane.setRowSpan(cardGroup, 2);
-            GridPane.setHalignment(cardGroup, HPos.CENTER);
-            GridPane.setValignment(cardGroup, VPos.CENTER);
-
-            index++;
-        }
-    }
-
-    public void setCardsGridMachine (CardModel[] cards, GridPane grid, int index){
-        for (CardModel ignored : cards) {
-            int num = random.nextInt(2);
-            String color;
-            if(num == 0){
-                color  = "red";
-            } else {
-                color  = "black";
-            }
-            Group cardGroup = cardDraw.drawCardBack(color);
             grid.add(cardGroup, index, 0);
             GridPane.setRowSpan(cardGroup, 2);
             GridPane.setHalignment(cardGroup, HPos.CENTER);
@@ -154,13 +145,7 @@ public class GameController {
         GridPane.setHalignment(cardGroup, HPos.CENTER);
         GridPane.setValignment(cardGroup, VPos.CENTER);
 
-        int num = random.nextInt(2);
-        String color;
-        if(num == 0){
-            color  = "red";
-        } else {
-            color  = "black";
-        }
+        String color = random.nextInt(2) == 0 ? "red" : "black";
         Group deck = cardDraw.drawCardBack(color);
         deckGrid.add(deck, 0, 0);
         GridPane.setRowSpan(deck, 2);
@@ -320,12 +305,6 @@ public class GameController {
         }
     }
 
-    public void setTurnMachines(){
-        int machines = gameModel.getMachines();
-        this.machine = new boolean[machines];
-        this.lossPlayer = new boolean[machines + 1];
-    }
-
     public void turns() {
         for (int i = 0; i < machine.length; i++) {
             if (machine[i]) {
@@ -357,7 +336,6 @@ public class GameController {
                 if (node instanceof Group groupNode) {
                     groupNode.getChildren().clear();
                 }
-
                 break;
             }
         }
@@ -388,7 +366,6 @@ public class GameController {
     }
 
     public void takeCard(){
-        Random random = new Random();
         int num = random.nextInt(gameModel.deck.getDeck().size());
         ArrayList<CardModel> cards = gameModel.deck.getDeck();
 
