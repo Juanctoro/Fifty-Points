@@ -13,10 +13,8 @@ public class WinOrLossThread extends Thread {
     }
 
     public void run() {
-        while (gameController.getGameOver()) {
-            win();
-            loss();
-        }
+        win();
+        loss();
     }
     private void win() {
         boolean allMachinesLost = true;

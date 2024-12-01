@@ -63,15 +63,11 @@ public class GameController{
         this.machine = new boolean[machines];
         this.lossPlayer = new boolean[machines + 1];
         this.toggleGroupA = new ToggleGroup();
-        TurnsThread turns = new TurnsThread(this);
-        turns.start();
 
         setCardsGrid(gameFacade.getGameModel().player.getHand(), playerGrid, 0);
         initializeMachines();
         initializeCard();
         setCard();
-        WinOrLossThread wins = new WinOrLossThread(this);
-        wins.start();
 
         a1.setStyle("-fx-font-size: 16px;");
         a10.setStyle("-fx-font-size: 16px;");
@@ -213,6 +209,8 @@ public class GameController{
     }
 
     public void turnManagement() {
+        TurnsThread turns = new TurnsThread(this);
+        turns.start();
         if (playerTurn) {
             Platform.runLater(() -> state.setText("Your turn"));
             state.setDisable(false);
@@ -255,6 +253,8 @@ public class GameController{
             });
             pause.play();
         }
+        WinOrLossThread winOrLoss = new WinOrLossThread(this);
+        winOrLoss.start();
     }
 
     private void handleMachineTurn(MachineModel machine, int machineIndex) {
@@ -370,7 +370,7 @@ public class GameController{
     }
 
     public void exitView(boolean game) throws IOException {
-        ExitView exitView = new ExitView();
+        ExitView exitView = ExitView.getInstance();
         exitView.setOnHiding(event -> {
             for (Window window : Stage.getWindows()) {
                 if (window.isShowing()) {
@@ -378,7 +378,6 @@ public class GameController{
                 }
             }
         });
-        exitView.show();
         ExitController exitViewController = exitView.getExitController();
         exitViewController.initialize(game, this.username);
     }
@@ -400,10 +399,6 @@ public class GameController{
     }
     public synchronized boolean getPlayerTurn() {
         return this.playerTurn;
-    }
-
-    public synchronized boolean getGameOver() {
-        return !this.gameOver;
     }
 
     public synchronized void setGameOver(boolean gameOver) {
