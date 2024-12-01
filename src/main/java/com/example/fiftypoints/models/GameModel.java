@@ -1,8 +1,8 @@
 package com.example.fiftypoints.models;
 
-import com.example.fiftypoints.models.abstractModels.HandModelFactory;
-import com.example.fiftypoints.models.factoryModels.MachineModelFactory;
-import com.example.fiftypoints.models.factoryModels.PlayerModelFactory;
+import com.example.fiftypoints.models.abstracts.HandModelFactory;
+import com.example.fiftypoints.models.factory.MachineModelFactory;
+import com.example.fiftypoints.models.factory.PlayerModelFactory;
 
 import java.util.ArrayList;
 import java.util.Arrays;

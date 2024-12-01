@@ -1,4 +1,4 @@
-package com.example.fiftypoints.models.abstractModels;
+package com.example.fiftypoints.models.abstracts;
 
 import com.example.fiftypoints.models.CardModel;
 

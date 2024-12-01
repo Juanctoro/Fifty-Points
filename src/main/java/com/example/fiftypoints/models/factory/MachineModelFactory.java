@@ -1,9 +1,9 @@
-package com.example.fiftypoints.models.factoryModels;
+package com.example.fiftypoints.models.factory;
 
 import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.MachineModel;
-import com.example.fiftypoints.models.abstractModels.HandModel;
-import com.example.fiftypoints.models.abstractModels.HandModelFactory;
+import com.example.fiftypoints.models.abstracts.HandModel;
+import com.example.fiftypoints.models.abstracts.HandModelFactory;
 
 public class MachineModelFactory extends HandModelFactory {
     @Override

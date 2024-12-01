@@ -1,4 +1,4 @@
-package com.example.fiftypoints.controllers;
+package com.example.fiftypoints.controllers.facade;
 
 import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
