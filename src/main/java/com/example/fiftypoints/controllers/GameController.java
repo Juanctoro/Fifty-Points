@@ -1,5 +1,10 @@
 package com.example.fiftypoints.controllers;
 
+import com.example.fiftypoints.controllers.facade.GameFacade;
+import com.example.fiftypoints.controllers.strategy.CardDrawingStrategy;
+import com.example.fiftypoints.controllers.strategy.StandardCardDrawingStrategy;
+import com.example.fiftypoints.controllers.threads.TurnsThread;
+import com.example.fiftypoints.controllers.threads.WinOrLossThread;
 import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
 import com.example.fiftypoints.models.MachineModel;
@@ -7,8 +12,6 @@ import com.example.fiftypoints.views.ExitView;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.geometry.HPos;
-import javafx.geometry.VPos;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -38,6 +41,7 @@ public class GameController{
     private boolean[] lossPlayer = new boolean[4];
     private boolean gameOver = false;
     private ToggleGroup toggleGroupA;
+    private CardDrawingStrategy cardDrawingStrategy;
 
     @FXML
     private Label playerUsername, state, sumOfPoints, machineLoss;
@@ -63,15 +67,12 @@ public class GameController{
         this.machine = new boolean[machines];
         this.lossPlayer = new boolean[machines + 1];
         this.toggleGroupA = new ToggleGroup();
-        TurnsThread turns = new TurnsThread(this);
-        turns.start();
+        this.cardDrawingStrategy = new StandardCardDrawingStrategy(this);
 
         setCardsGrid(gameFacade.getGameModel().player.getHand(), playerGrid, 0);
         initializeMachines();
         initializeCard();
         setCard();
-        WinOrLossThread wins = new WinOrLossThread(this);
-        wins.start();
 
         a1.setStyle("-fx-font-size: 16px;");
         a10.setStyle("-fx-font-size: 16px;");
@@ -91,12 +92,8 @@ public class GameController{
         for (CardModel[] cards : handsList) {
             int indexCard = index[aux];
             for (CardModel ignored : cards) {
-                String color = gameFacade.getRandom().nextInt(2) == 0 ? "red" : "black";
-                Group cardGroup = gameFacade.getDrawCard().drawCardBack(color);
-                machinesGrid.add(cardGroup, indexCard, 0);
-                GridPane.setRowSpan(cardGroup, 2);
-                GridPane.setHalignment(cardGroup, HPos.CENTER);
-                GridPane.setValignment(cardGroup, VPos.CENTER);
+                Group cardGroup = cardDrawingStrategy.drawCardBack();
+                cardDrawingStrategy.addCardToGridPane(cardGroup, machinesGrid, indexCard,0);
                 indexCard++;
             }
             aux++;
@@ -105,12 +102,8 @@ public class GameController{
 
     public void setCardsGrid (CardModel[] cards, GridPane grid, int index){
         for (CardModel card : cards) {
-            Group cardGroup = gameFacade.getDrawCard().drawCard(card.getNumber(), card.getSuits());
-            grid.add(cardGroup, index, 0);
-            GridPane.setRowSpan(cardGroup, 2);
-            GridPane.setHalignment(cardGroup, HPos.CENTER);
-            GridPane.setValignment(cardGroup, VPos.CENTER);
-
+            Group cardGroup = cardDrawingStrategy.drawCard(card);
+            cardDrawingStrategy.addCardToGridPane(cardGroup, grid, index,0);
             index++;
         }
     }
@@ -119,18 +112,11 @@ public class GameController{
         CardModel startCart = gameFacade.startCard();
         String number = "Points: " + gameFacade.getPoints();
         sumOfPoints.setText(number);
-        Group cardGroup = gameFacade.getDrawCard().drawCard(startCart.getNumber(), startCart.getSuits());
-        gameGrid.add(cardGroup, 0, 0);
-        GridPane.setRowSpan(cardGroup, 2);
-        GridPane.setHalignment(cardGroup, HPos.CENTER);
-        GridPane.setValignment(cardGroup, VPos.CENTER);
+        Group cardGroup = cardDrawingStrategy.drawCard(startCart);
+        cardDrawingStrategy.addCardToGridPane(cardGroup, gameGrid, 0,0);
 
-        String color = gameFacade.getRandom().nextInt(2) == 0 ? "red" : "black";
-        Group deck = gameFacade.getDrawCard().drawCardBack(color);
-        deckGrid.add(deck, 0, 0);
-        GridPane.setRowSpan(deck, 2);
-        GridPane.setHalignment(deck, HPos.CENTER);
-        GridPane.setValignment(deck, VPos.CENTER);
+        Group deck = cardDrawingStrategy.drawCardBack();
+        cardDrawingStrategy.addCardToGridPane(deck, deckGrid,0,0);
     }
 
     private void setCard() {
@@ -213,6 +199,8 @@ public class GameController{
     }
 
     public void turnManagement() {
+        TurnsThread turns = new TurnsThread(this);
+        turns.start();
         if (playerTurn) {
             Platform.runLater(() -> state.setText("Your turn"));
             state.setDisable(false);
@@ -255,6 +243,8 @@ public class GameController{
             });
             pause.play();
         }
+        WinOrLossThread winOrLoss = new WinOrLossThread(this);
+        winOrLoss.start();
     }
 
     private void handleMachineTurn(MachineModel machine, int machineIndex) {
@@ -334,13 +324,9 @@ public class GameController{
 
         CardModel card = cards.get(num);
         gameFacade.getGameModel().player.setCard(card, colum);
-        Group cardGroup = gameFacade.getDrawCard().drawCard(card.getNumber(), card.getSuits());
-        Platform.runLater(() -> {
-            playerGrid.add(cardGroup, colum, 0);
-            GridPane.setRowSpan(cardGroup, 2);
-            GridPane.setHalignment(cardGroup, HPos.CENTER);
-            GridPane.setValignment(cardGroup, VPos.CENTER);
-        });
+        Group cardGroup = cardDrawingStrategy.drawCard(card);
+        Platform.runLater(() -> cardDrawingStrategy.addCardToGridPane(cardGroup, playerGrid,colum,0));
+
         gameFacade.getGameModel().deck.subtractCard(card);
         setCard();
     }
@@ -370,7 +356,7 @@ public class GameController{
     }
 
     public void exitView(boolean game) throws IOException {
-        ExitView exitView = new ExitView();
+        ExitView exitView = ExitView.getInstance();
         exitView.setOnHiding(event -> {
             for (Window window : Stage.getWindows()) {
                 if (window.isShowing()) {
@@ -378,7 +364,6 @@ public class GameController{
                 }
             }
         });
-        exitView.show();
         ExitController exitViewController = exitView.getExitController();
         exitViewController.initialize(game, this.username);
     }
@@ -400,10 +385,6 @@ public class GameController{
     }
     public synchronized boolean getPlayerTurn() {
         return this.playerTurn;
-    }
-
-    public synchronized boolean getGameOver() {
-        return !this.gameOver;
     }
 
     public synchronized void setGameOver(boolean gameOver) {

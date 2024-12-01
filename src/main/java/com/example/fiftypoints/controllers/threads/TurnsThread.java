@@ -1,4 +1,6 @@
-package com.example.fiftypoints.controllers;
+package com.example.fiftypoints.controllers.threads;
+
+import com.example.fiftypoints.controllers.GameController;
 
 public class TurnsThread extends Thread {
     private final GameController gameController;
@@ -8,9 +10,7 @@ public class TurnsThread extends Thread {
     }
 
     public void run() {
-        while (gameController.getGameOver()) {
-            executeBackgroundCalculations();
-        }
+        executeBackgroundCalculations();
     }
 
     private void executeBackgroundCalculations() {

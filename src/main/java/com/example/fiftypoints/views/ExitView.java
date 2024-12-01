@@ -31,4 +31,17 @@ public class ExitView extends Stage {
     public ExitController getExitController() throws IOException {
         return this.exitController;
     }
+
+    private static class ExitViewHolder {
+        private static ExitView INSTANCE;
+    }
+
+    public static ExitView getInstance() throws IOException {
+
+        if (ExitView.ExitViewHolder.INSTANCE == null) {
+            return ExitView.ExitViewHolder.INSTANCE = new ExitView();
+        } else {
+            return ExitView.ExitViewHolder.INSTANCE;
+        }
+    }
 }

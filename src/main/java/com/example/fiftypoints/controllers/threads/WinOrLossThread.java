@@ -1,5 +1,6 @@
-package com.example.fiftypoints.controllers;
+package com.example.fiftypoints.controllers.threads;
 
+import com.example.fiftypoints.controllers.GameController;
 import com.example.fiftypoints.models.CardModel;
 import javafx.application.Platform;
 
@@ -13,10 +14,8 @@ public class WinOrLossThread extends Thread {
     }
 
     public void run() {
-        while (gameController.getGameOver()) {
-            win();
-            loss();
-        }
+        win();
+        loss();
     }
     private void win() {
         boolean allMachinesLost = true;
