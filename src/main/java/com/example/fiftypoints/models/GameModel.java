@@ -19,6 +19,7 @@ public class GameModel {
 
     public GameModel(int machines) {
         this.machines = machines;
+        DeckModel.resetInstance();
         this.deck = DeckModel.getInstance();
         player = (PlayerModel) new PlayerModelFactory().createHandModel(setHands());
         setMachines();
