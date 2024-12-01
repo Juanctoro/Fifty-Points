@@ -162,21 +162,22 @@ public class GameController{
                 }
 
                 this.cardNumber = getCardNumberFromGroup(clickedGroup);
-                if(Objects.equals(this.cardNumber, "A")) {
+                if (Objects.equals(this.cardNumber, "A")) {
                     a1.setVisible(true);
                     a10.setVisible(true);
+                    throwCard.setDisable(true);
+
+                    toggleGroupA.selectedToggleProperty().addListener((observable, oldValue, newValue) -> {
+                        if (newValue != null) {
+                            throwCard.setDisable(false);
+                        }
+                    });
+                } else {
                     throwCard.setDisable(false);
-                    RadioButton selected = (RadioButton) toggleGroupA.getSelectedToggle();
-                    if (selected != null) {
-                        throwCard.setDisable(true);
-                    }
                 }
+
                 this.group = clickedGroup;
                 this.colum = columnIndex;
-
-                if (this.cardNumber != null) {
-                    throwCard.setDisable(false);
-                }
             });
 
             node.addEventHandler(MouseEvent.MOUSE_ENTERED, event -> {
