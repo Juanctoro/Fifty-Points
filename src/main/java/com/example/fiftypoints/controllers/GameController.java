@@ -65,7 +65,7 @@ public class GameController {
         this.gameOver = false;
         this.username = username;
         playerUsername.setText(username);
-        CardModel[] handPlayer = gameModel.player.getCards();
+        CardModel[] handPlayer = gameModel.player.getHand();
         setCardsGrid(handPlayer, playerGrid, 0);
         initializeMachines();
         initializeCard();
@@ -299,7 +299,7 @@ public class GameController {
             points += setNumber();
             sumOfPoints.setText("Points: " + points);
             CardModel cardForSet = gameModel.startCard();
-            machine.setCards(cardForSet, machine.getIndex());
+            machine.setCard(cardForSet, machine.getIndex());
             CardModel[] aux = {card};
             setCardsGrid(aux, gameGrid, 0);
         }
@@ -370,7 +370,7 @@ public class GameController {
         ArrayList<CardModel> cards = gameModel.deck.getDeck();
 
         CardModel card = cards.get(num);
-        gameModel.player.setCards(card, colum);
+        gameModel.player.setCard(card, colum);
         Group cardGroup = cardDraw.drawCard(card.getNumber(), card.getSuits());
         Platform.runLater(() -> {
             playerGrid.add(cardGroup, colum, 0);
@@ -446,7 +446,7 @@ public class GameController {
     }
 
     private boolean playerLoss(){
-        for (CardModel card : gameModel.player.getCards()) {
+        for (CardModel card : gameModel.player.getHand()) {
             int number;
             boolean subtract = false;
 

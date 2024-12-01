@@ -7,9 +7,5 @@ public interface IMachine {
 
     CardModel[] getHand();
 
-    void removeCard(int Colum);
-
-    void setCards(CardModel card, int colum);
-
     int getIndex();
 }

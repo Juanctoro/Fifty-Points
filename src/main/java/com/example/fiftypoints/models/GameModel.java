@@ -15,8 +15,8 @@ public class GameModel {
 
     public GameModel(int machines) {
         this.machines = machines;
-        this.deck = new DeckModel();
-        player = new PlayerModel(setHands());
+        this.deck = DeckModel.getInstance();
+        player = (PlayerModel) new PlayerModelFactory().createHandModel(setHands());
         setMachines();
     }
 
@@ -32,16 +32,17 @@ public class GameModel {
         return hand; 
     }
 
-    public void setMachines(){
-        if(machines == 1){
-            machine = new MachineModel(setHands());
-        } else if(machines == 2){
-            machine = new MachineModel(setHands());
-            machineTwo = new MachineModel(setHands());
-        } else if(machines == 3){
-            machine = new MachineModel(setHands());
-            machineTwo = new MachineModel(setHands());
-            machineThree = new MachineModel(setHands());
+    public void setMachines() {
+        HandModelFactory factory = new MachineModelFactory();
+        if (machines == 1) {
+            machine = (MachineModel) factory.createHandModel(setHands());
+        } else if (machines == 2) {
+            machine = (MachineModel) factory.createHandModel(setHands());
+            machineTwo = (MachineModel) factory.createHandModel(setHands());
+        } else if (machines == 3) {
+            machine = (MachineModel) factory.createHandModel(setHands());
+            machineTwo = (MachineModel) factory.createHandModel(setHands());
+            machineThree = (MachineModel) factory.createHandModel(setHands());
         }
     }
 
@@ -82,8 +83,8 @@ public class GameModel {
         ArrayList<CardModel> fullDeck = deck.getNewDeck();
         ArrayList<CardModel> remainingCards = new ArrayList<>(fullDeck);
 
-        if (player.getCards() != null) {
-            remainingCards.removeAll(new ArrayList<>(Arrays.asList(player.getCards())));
+        if (player.getHand() != null) {
+            remainingCards.removeAll(new ArrayList<>(Arrays.asList(player.getHand())));
         }
 
         if (machine.getHand() != null) {

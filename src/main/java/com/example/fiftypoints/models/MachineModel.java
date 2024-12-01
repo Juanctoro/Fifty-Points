@@ -2,12 +2,11 @@ package com.example.fiftypoints.models;
 
 import com.example.fiftypoints.interfaces.IMachine;
 
-public class MachineModel implements IMachine {
-    CardModel[] cards;
+public class MachineModel extends HandModel implements IMachine {
     private int index = 0;
 
-    public MachineModel(CardModel[] hand) {
-        cards = hand;
+    public MachineModel(CardModel[] cards) {
+        super(cards);
     }
 
     public CardModel throwCard(int position) {
@@ -46,18 +45,6 @@ public class MachineModel implements IMachine {
             this.index++;
         }
         return null;
-    }
-
-    public CardModel[] getHand() {
-        return cards;
-    }
-
-    public void removeCard(int Colum) {
-        this.cards[Colum] = null;
-    }
-
-    public void setCards(CardModel card, int colum) {
-        this.cards[colum] = card;
     }
 
     public int getIndex() {
