@@ -8,7 +8,7 @@ public class TurnsThread extends Thread {
     }
 
     public void run() {
-        while (!gameController.getGameOver()) {
+        while (gameController.getGameOver()) {
             executeBackgroundCalculations();
         }
     }

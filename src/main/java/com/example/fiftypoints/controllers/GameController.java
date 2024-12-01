@@ -46,13 +46,14 @@ public class GameController{
     private GridPane playerGrid, machinesGrid, gameGrid, deckGrid;
 
     @FXML
-    private Button throwCard;
+    public Button throwCard;
 
     @FXML
     private RadioButton a1, a10;
 
     @FXML
     public void initialize(String username, int machines) {
+        machineLoss.setText("");
         playerUsername.setText(username);
         machinesGrid.getChildren().clear();
         this.gameFacade = new GameFacade(new GameModel(machines));
@@ -69,6 +70,8 @@ public class GameController{
         initializeMachines();
         initializeCard();
         setCard();
+        WinOrLossThread wins = new WinOrLossThread(this);
+        wins.start();
 
         a1.setStyle("-fx-font-size: 16px;");
         a10.setStyle("-fx-font-size: 16px;");
@@ -210,22 +213,18 @@ public class GameController{
     }
 
     public void turnManagement() {
-        if(gameOver){
-            return;
-        }
-        if (playerTurn && !lossPlayer[0]) {
+        if (playerTurn) {
             Platform.runLater(() -> state.setText("Your turn"));
             state.setDisable(false);
-            if(playerLoss()){
-                gameOver = true;
-            }
         } else {
             throwCard.setDisable(true);
-            Platform.runLater(() -> state.setText("Machine's turn"));
-
+            if(machine[0]){
+                Platform.runLater(() -> state.setText("Machine's 1 turn"));
+            }
             PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
             pause.setOnFinished(event -> {
                 if (machine[0] && !lossPlayer[1]) {
+                    state.setText("Machine's 2 turn");
                     handleMachineTurn(gameFacade.getGameModel().machine, 1);
                     if(gameFacade.getGameModel().getMachines() > 1){
                         machine[1] = true;
@@ -236,6 +235,7 @@ public class GameController{
                     setCard();
                     turnManagement();
                 } else if (machine.length > 1 && machine[1] && !lossPlayer[2]) {
+                    state.setText("Machine's 3 turn");
                     handleMachineTurn(gameFacade.getGameModel().machineTwo, 2);
                     if(gameFacade.getGameModel().getMachines() > 2){
                         machine[2] = true;
@@ -255,7 +255,6 @@ public class GameController{
             });
             pause.play();
         }
-        win();
     }
 
     private void handleMachineTurn(MachineModel machine, int machineIndex) {
@@ -297,6 +296,7 @@ public class GameController{
     }
 
     public void throwCard(){
+        this.playerTurn = false;
         throwCard.setDisable(true);
         state.setDisable(true);
         if(gameFacade.setNumber(cardNumber, true) == 11){
@@ -313,7 +313,6 @@ public class GameController{
         removeCardHand(this.colum);
         sumOfPoints.setText("Points: " + gameFacade.getPoints());
         setCard();
-        this.playerTurn = false;
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
         pause.setOnFinished(event -> {
@@ -346,32 +345,6 @@ public class GameController{
         setCard();
     }
 
-    private void win() {
-        if (gameOver) {
-            return;
-        }
-        boolean allMachinesLost = true;
-
-        for (int i = 1; i <= gameFacade.getGameModel().getMachines(); i++) {
-            if (!lossPlayer[i]) {
-                allMachinesLost = false;
-                break;
-            }
-        }
-
-        if (allMachinesLost && !lossPlayer[0]) {
-            gameOver = true;
-            Platform.runLater(() -> {
-                try {
-                    exitView(false);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            throwCard.setDisable(true);
-        }
-    }
-
     public void isLoss(){
         int index = 0;
         StringBuilder text = new StringBuilder();
@@ -384,24 +357,19 @@ public class GameController{
         machineLoss.setText(text.toString());
     }
 
-    public boolean playerLoss(){
-        if(!gameFacade.playerLoss()){
-            return false;
-        } else {
-            gameOver = true;
-            this.lossPlayer[0] = true;
-            throwCard.setDisable(true);
-            playerTurn = false;
+    public void playerLoss(){
+        throwCard.setDisable(true);
+        playerTurn = false;
+        Platform.runLater(() -> {
             try {
                 exitView(this.gameOver);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            return true;
-        }
+        });
     }
 
-    private void exitView(boolean game) throws IOException {
+    public void exitView(boolean game) throws IOException {
         ExitView exitView = new ExitView();
         exitView.setOnHiding(event -> {
             for (Window window : Stage.getWindows()) {
@@ -430,8 +398,23 @@ public class GameController{
     public synchronized void setPlayerTurn(boolean isPlayerTurn) {
         this.playerTurn = isPlayerTurn;
     }
+    public synchronized boolean getPlayerTurn() {
+        return this.playerTurn;
+    }
 
     public synchronized boolean getGameOver() {
-        return this.gameOver;
+        return !this.gameOver;
+    }
+
+    public synchronized void setGameOver(boolean gameOver) {
+        this.gameOver = gameOver;
+    }
+
+    public synchronized GameFacade getGameFacade() {
+        return gameFacade;
+    }
+
+    public synchronized void setLossPlayer(boolean lossPlayer){
+        this.lossPlayer[0] = lossPlayer;
     }
 }

@@ -77,40 +77,6 @@ public class GameFacade{
         }
     }
 
-    public boolean playerLoss (){
-        for (CardModel card : gameModel.player.getHand()) {
-            int number;
-            boolean subtract = false;
-
-            try {
-                number = Integer.parseInt(card.getNumber());
-                if(number == 9) {
-                    number = 0;
-                }
-            } catch (NumberFormatException ignored) {
-                switch (card.getNumber()) {
-                    case "J":
-                    case "Q":
-                    case "K":
-                        number = 10;
-                        subtract = true;
-                        break;
-                    case "A":
-                        number = (points + 10 <= 50) ? 10 : 1;
-                        break;
-                    default:
-                        continue;
-                }
-            }
-            if (subtract && points > 40) {
-                return false;
-            } else if (number + points <= 50) {
-                return false;
-            }
-        }
-        return false;
-    }
-
     public int getPoints() {
         return points;
     }
