@@ -63,7 +63,6 @@ public class GameModel {
         }
         if (cards.size() == 1) {
             lastCard = cards.get(0);
-            System.out.println("last card: " + lastCard);
         }
 
         Random random = new Random();

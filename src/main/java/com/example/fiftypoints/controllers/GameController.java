@@ -152,6 +152,7 @@ public class GameController{
 
                 this.cardNumber = getCardNumberFromGroup(clickedGroup);
                 if (Objects.equals(this.cardNumber, "A")) {
+                    toggleGroupA.selectToggle(null);
                     a1.setVisible(true);
                     a10.setVisible(true);
                     throwCard.setDisable(true);
@@ -162,6 +163,8 @@ public class GameController{
                         }
                     });
                 } else {
+                    a1.setVisible(false);
+                    a10.setVisible(false);
                     throwCard.setDisable(false);
                 }
 

@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 public class StandardCardDrawingStrategy implements CardDrawingStrategy {
     private final GameFacade gameFacade;
 
-    StandardCardDrawingStrategy(GameController gameController) {
+    public StandardCardDrawingStrategy(GameController gameController) {
         gameFacade = gameController.getGameFacade();
     }
 
