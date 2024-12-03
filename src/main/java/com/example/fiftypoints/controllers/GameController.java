@@ -42,6 +42,7 @@ public class GameController{
     private boolean gameOver = false;
     private ToggleGroup toggleGroupA;
     private CardDrawingStrategy cardDrawingStrategy;
+    private int indexRemove;
 
     @FXML
     private Label playerUsername, state, sumOfPoints, machineLoss;
@@ -207,7 +208,7 @@ public class GameController{
             if(machine[0]){
                 Platform.runLater(() -> state.setText("Machine's 1 turn"));
             }
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
+            PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
             pause.setOnFinished(event -> {
                 for (int i = 0; i < machine.length; i++) {
                     if (machine[i] && !lossPlayer[i + 1]) {
@@ -262,19 +263,28 @@ public class GameController{
             sumOfPoints.setText("Points: " + gameFacade.getPoints());
             CardModel cardForSet = gameFacade.getGameModel().startCard();
             machine.setCard(cardForSet, machine.getIndex());
+            int[] index = calculateMachineIndices();
+            int indexCard = machine.getIndex();
+            indexRemove = index[machineIndex-1] + indexCard;
+            removeCardHand(machinesGrid, indexRemove);
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
+            pause.setOnFinished(event -> {
+                System.out.println("Hola");
+                Group cardSet = cardDrawingStrategy.drawCardBack();
+                cardDrawingStrategy.addCardToGridPane(cardSet, machinesGrid, indexRemove,0);
+            });
+            pause.play();
             CardModel[] aux = {card};
             setCardsGrid(aux, gameGrid, 0);
         }
     }
 
-    public void removeCardHand(int colum){
-        for (Node node : playerGrid.getChildren()) {
+    public void removeCardHand(GridPane gridPane, int colum){
+        for (Node node : gridPane.getChildren()) {
             Integer columnIndex = GridPane.getColumnIndex(node);
 
             if (columnIndex != null && columnIndex == colum) {
-                if (node instanceof Group groupNode) {
-                    groupNode.getChildren().clear();
-                }
+                gridPane.getChildren().remove(node);
                 break;
             }
         }
@@ -320,7 +330,7 @@ public class GameController{
         }
         gameGrid.add(this.group, 0, 0);
         gameFacade.getGameModel().player.throwCard(this.colum);
-        removeCardHand(this.colum);
+        removeCardHand(playerGrid,this.colum);
         sumOfPoints.setText("Points: " + gameFacade.getPoints());
         setCard();
 

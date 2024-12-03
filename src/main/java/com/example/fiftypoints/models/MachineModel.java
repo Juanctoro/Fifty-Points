@@ -4,14 +4,14 @@ import com.example.fiftypoints.interfaces.IMachine;
 import com.example.fiftypoints.models.abstracts.HandModel;
 
 public class MachineModel extends HandModel implements IMachine {
-    private int index = 0;
+    private int currentIndex = 0;
 
     public MachineModel(CardModel[] cards) {
         super(cards);
     }
 
     public CardModel throwCard(int position) {
-        this.index = 0;
+        int index = 0;
         for (CardModel card : cards) {
             int number;
             boolean subtract = false;
@@ -37,18 +37,20 @@ public class MachineModel extends HandModel implements IMachine {
                 }
             }
             if (subtract && position > 40) {
-                removeCard(this.index);
+                removeCard(index);
+                currentIndex = index;
                 return card;
             } else if (number + position <= 50) {
-                removeCard(this.index);
+                removeCard(index);
+                currentIndex = index;
                 return card;
             }
-            this.index++;
+            index++;
         }
         return null;
     }
 
     public int getIndex() {
-        return index;
+        return currentIndex;
     }
 }
