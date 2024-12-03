@@ -82,13 +82,8 @@ public class GameController{
 
     public void initializeMachines (){
         int aux = 0;
-        int[] index = {0, 5, 10};
+        int[] index = calculateMachineIndices();
         ArrayList<CardModel[]> handsList = gameFacade.machines();
-        if(gameFacade.getGameModel().getMachines() == 1){
-            index = new int[]{5};
-        } else if(gameFacade.getGameModel().getMachines() == 2){
-            index = new int[]{3, 8};
-        }
         for (CardModel[] cards : handsList) {
             int indexCard = index[aux];
             for (CardModel ignored : cards) {
@@ -212,42 +207,37 @@ public class GameController{
             if(machine[0]){
                 Platform.runLater(() -> state.setText("Machine's 1 turn"));
             }
-            PauseTransition pause = new PauseTransition(Duration.seconds(0.2));
+            PauseTransition pause = new PauseTransition(Duration.seconds(0.3));
             pause.setOnFinished(event -> {
-                if (machine[0] && !lossPlayer[1]) {
-                    state.setText("Machine's 2 turn");
-                    handleMachineTurn(gameFacade.getGameModel().machine, 1);
-                    if(gameFacade.getGameModel().getMachines() > 1){
-                        machine[1] = true;
-                    } else {
-                        playerTurn = true;
+                for (int i = 0; i < machine.length; i++) {
+                    if (machine[i] && !lossPlayer[i + 1]) {
+                        state.setText("Machine's " + (i + 2) + " turn");
+                        handleMachineTurn(getMachineByIndex(i), i + 1);
+                        if (gameFacade.getGameModel().getMachines() > i + 1) {
+                            machine[i + 1] = true;
+                        } else {
+                            playerTurn = true;
+                        }
+                        machine[i] = false;
+                        setCard();
+                        turnManagement();
+                        break;
                     }
-                    machine[0] = false;
-                    setCard();
-                    turnManagement();
-                } else if (machine.length > 1 && machine[1] && !lossPlayer[2]) {
-                    state.setText("Machine's 3 turn");
-                    handleMachineTurn(gameFacade.getGameModel().machineTwo, 2);
-                    if(gameFacade.getGameModel().getMachines() > 2){
-                        machine[2] = true;
-                    } else {
-                        playerTurn = true;
-                    }
-                    machine[1] = false;
-                    setCard();
-                    turnManagement();
-                } else if (machine.length > 2  && machine[2] && !lossPlayer[3]) {
-                    handleMachineTurn(gameFacade.getGameModel().machineThree, 3);
-                    playerTurn = true;
-                    machine[2] = false;
-                    setCard();
-                    turnManagement();
                 }
             });
             pause.play();
         }
         WinOrLossThread winOrLoss = new WinOrLossThread(this);
         winOrLoss.start();
+    }
+
+    private MachineModel getMachineByIndex(int index) {
+        return switch (index) {
+            case 0 -> gameFacade.getGameModel().machine;
+            case 1 -> gameFacade.getGameModel().machineTwo;
+            case 2 -> gameFacade.getGameModel().machineThree;
+            default -> throw new IllegalArgumentException("Invalid machine index: " + index);
+        };
     }
 
     private void handleMachineTurn(MachineModel machine, int machineIndex) {
@@ -257,6 +247,8 @@ public class GameController{
         CardModel card = machine.throwCard(gameFacade.getPoints());
         if(card == null){
             lossPlayer[machineIndex] = true;
+            gameFacade.getGameModel().lossMachine(machine, machineIndex);
+            removeCardsMachines(machineIndex - 1);
             if(machineIndex <=2 ){
                 this.machine[machineIndex-1] = true;
             } else {
@@ -286,6 +278,31 @@ public class GameController{
                 break;
             }
         }
+    }
+
+    public void removeCardsMachines(int machineIndex) {
+        int[] index = calculateMachineIndices();
+        if (machineIndex < 0 || machineIndex >= index.length) {
+            throw new IllegalArgumentException("Invalid machine index: " + machineIndex);
+        }
+        int startIndex = index[machineIndex];
+        for (int i = 0; i < 4; i++) {
+            int currentIndex = startIndex + i;
+
+            machinesGrid.getChildren().removeIf(node -> {
+                Integer column = GridPane.getColumnIndex(node);
+                Integer row = GridPane.getRowIndex(node);
+                return column != null && column == currentIndex && row != null && row == 0;
+            });
+        }
+    }
+
+    private int[] calculateMachineIndices() {
+        return switch (gameFacade.getGameModel().getMachines()) {
+            case 1 -> new int[]{5};
+            case 2 -> new int[]{3, 8};
+            default -> new int[]{0, 5, 10};
+        };
     }
 
     public void throwCard(){
