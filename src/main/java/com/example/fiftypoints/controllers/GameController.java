@@ -213,11 +213,12 @@ public class GameController{
                 for (int i = 0; i < machine.length; i++) {
                     if (machine[i] && !lossPlayer[i + 1]) {
                         state.setText("Machine's " + (i + 2) + " turn");
+                        if(i==2){
+                            state.setText("Machine's " + (i + 1) + " turn");
+                        }
                         handleMachineTurn(getMachineByIndex(i), i + 1);
                         if (gameFacade.getGameModel().getMachines() > i + 1) {
                             machine[i + 1] = true;
-                        } else {
-                            playerTurn = true;
                         }
                         machine[i] = false;
                         setCard();
@@ -272,6 +273,10 @@ public class GameController{
                 System.out.println("Hola");
                 Group cardSet = cardDrawingStrategy.drawCardBack();
                 cardDrawingStrategy.addCardToGridPane(cardSet, machinesGrid, indexRemove,0);
+                if(machineIndex == 3){
+                    playerTurn = true;
+                    turnManagement();
+                }
             });
             pause.play();
             CardModel[] aux = {card};
@@ -332,6 +337,11 @@ public class GameController{
         gameFacade.getGameModel().player.throwCard(this.colum);
         removeCardHand(playerGrid,this.colum);
         sumOfPoints.setText("Points: " + gameFacade.getPoints());
+        if(gameFacade.getPoints() > 50){
+            gameOver = true;
+            lossPlayer[0] = true;
+            playerLoss();
+        }
         setCard();
 
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
