@@ -23,7 +23,7 @@ public class StandardCardDrawingStrategy implements CardDrawingStrategy {
     @Override
     public Group drawCardBack() {
         String color = gameFacade.getRandom().nextInt(2) == 0 ? "red" : "black";
-        return gameFacade.getDrawCard().drawCardBack(color);
+        return gameFacade.getDrawCard().drawCardBack();
     }
 
     @Override
