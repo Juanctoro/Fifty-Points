@@ -16,6 +16,7 @@ public class GameModel {
     public MachineModel machineThree;
     public DeckModel deck;
     public CardModel lastCard;
+    private final boolean[] machinesLoss = {false, false, false};
 
     public GameModel(int machines) {
         this.machines = machines;
@@ -63,7 +64,6 @@ public class GameModel {
         }
         if (cards.size() == 1) {
             lastCard = cards.get(0);
-            System.out.println("last card: " + lastCard);
         }
 
         Random random = new Random();
@@ -92,19 +92,19 @@ public class GameModel {
             remainingCards.removeAll(new ArrayList<>(Arrays.asList(player.getHand())));
         }
 
-        if (machine.getHand() != null) {
+        if (machine.getHand() != null && machinesLoss[0]) {
             remainingCards.removeAll(new ArrayList<>(Arrays.asList(machine.getHand())));
         }
 
         if (machines > 2) {
-            if (machineTwo.getHand() != null) {
+            if (machineTwo.getHand() != null && machinesLoss[1]) {
                 remainingCards.removeAll(new ArrayList<>(Arrays.asList(machineTwo.getHand())));
             }
-            if (machineThree.getHand() != null) {
+            if (machineThree.getHand() != null && machinesLoss[2]) {
                 remainingCards.removeAll(new ArrayList<>(Arrays.asList(machineThree.getHand())));
             }
         } else if (machines > 1) {
-            if (machineTwo.getHand() != null) {
+            if (machineTwo.getHand() != null && machinesLoss[1]) {
                 remainingCards.removeAll(new ArrayList<>(Arrays.asList(machineTwo.getHand())));
             }
         }
@@ -115,4 +115,11 @@ public class GameModel {
 
         deck.setDeck(remainingCards);
     }
+
+    public void lossMachine(MachineModel machine, int index) {
+        CardModel[] hand =  machine.getHand();
+        deck.setValidCards(hand);
+        machinesLoss[index - 1] = true;
+    }
+
 }

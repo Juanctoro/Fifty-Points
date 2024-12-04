@@ -3,6 +3,7 @@ package com.example.fiftypoints.models;
 import com.example.fiftypoints.interfaces.IDeck;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class DeckModel implements IDeck {
     private static DeckModel instance;
@@ -53,5 +54,9 @@ public class DeckModel implements IDeck {
 
     public void setDeck(ArrayList<CardModel> deck) {
         this.validCards = deck;
+    }
+
+    public void setValidCards(CardModel[] validCards) {
+        this.validCards.addAll(List.of(validCards));
     }
 }

@@ -11,7 +11,7 @@ import javafx.scene.layout.GridPane;
 public class StandardCardDrawingStrategy implements CardDrawingStrategy {
     private final GameFacade gameFacade;
 
-    StandardCardDrawingStrategy(GameController gameController) {
+    public StandardCardDrawingStrategy(GameController gameController) {
         gameFacade = gameController.getGameFacade();
     }
 
@@ -22,8 +22,7 @@ public class StandardCardDrawingStrategy implements CardDrawingStrategy {
 
     @Override
     public Group drawCardBack() {
-        String color = gameFacade.getRandom().nextInt(2) == 0 ? "red" : "black";
-        return gameFacade.getDrawCard().drawCardBack(color);
+        return gameFacade.getDrawCard().drawCardBack();
     }
 
     @Override
