@@ -270,7 +270,6 @@ public class GameController{
             removeCardHand(machinesGrid, indexRemove);
             PauseTransition pause = new PauseTransition(Duration.seconds(1));
             pause.setOnFinished(event -> {
-                System.out.println("Hola");
                 Group cardSet = cardDrawingStrategy.drawCardBack();
                 cardDrawingStrategy.addCardToGridPane(cardSet, machinesGrid, indexRemove,0);
                 if(machineIndex == 3){
