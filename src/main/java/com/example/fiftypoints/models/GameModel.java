@@ -121,5 +121,4 @@ public class GameModel {
         deck.setValidCards(hand);
         machinesLoss[index - 1] = true;
     }
-
 }
