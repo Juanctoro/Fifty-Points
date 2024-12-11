@@ -201,7 +201,9 @@ public class GameController{
     }
 
     public void turnManagement() {
-        System.out.println("turnManagement");
+        if (gameOver) {
+            return;
+        }
         TurnsThread turns = new TurnsThread(this);
         turns.start();
         if (playerTurn) {
@@ -220,12 +222,12 @@ public class GameController{
                         if(i==2){
                             state.setText("Machine's " + (i + 1) + " turn");
                         }
-                        handleMachineTurn(getMachineByIndex(i), i + 1);
                         if (gameFacade.getGameModel().getMachines() > i + 1) {
                             machine[i + 1] = true;
                         } else {
                             playerTurn = true;
                         }
+                        handleMachineTurn(getMachineByIndex(i), i + 1);
                         machine[i] = false;
                         setCard();
                         turnManagement();
