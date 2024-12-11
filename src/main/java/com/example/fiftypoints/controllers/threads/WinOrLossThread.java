@@ -42,7 +42,7 @@ public class WinOrLossThread extends Thread {
 
     public void loss (){
         boolean allCards =  false;
-        if(gameController.getPlayerTurn()){
+        if(gameController.getPlayerTurn() && !gameController.getGameOver()){
             for (CardModel card : gameController.getGameFacade().getGameModel().player.getHand()) {
                 int number;
                 boolean subtract = false;
@@ -68,14 +68,13 @@ public class WinOrLossThread extends Thread {
                     }
                 }
                 if (subtract && gameController.getGameFacade().getPoints() > 40) {
-                    gameController.setLossPlayer(false);
                     allCards = false;
                     break;
                 } else if (number + gameController.getGameFacade().getPoints() <= 50) {
-                    gameController.setLossPlayer(false);
                     allCards = false;
                     break;
                 } else {
+                    gameController.invalidCards = true;
                     allCards = true;
                 }
             }

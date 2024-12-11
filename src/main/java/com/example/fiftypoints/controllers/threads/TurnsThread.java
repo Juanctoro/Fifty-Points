@@ -23,8 +23,12 @@ public class TurnsThread extends Thread {
                     if (lossPlayer.length > i + 1 && lossPlayer[i + 1]) {
                         machine[i] = false;
                         if (i + 1 < machine.length) {
-                            machine[i + 1] = true;
-                            gameController.setMachineState(machine);
+                            if (gameController.getGameFacade().getGameModel().getMachines() > i + 1){
+                                machine[i + 1] = true;
+                                gameController.setMachineState(machine);
+                            } else{
+                                gameController.setPlayerTurn(true);
+                            }
                         } else {
                             gameController.setPlayerTurn(true);
                         }
