@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class ExitController {
     @FXML
-    private Label lossOrWin, machinesLabel;
+    private Label lossOrWin, machinesLabel, typeLoss;
 
     @FXML
     private RadioButton oneMachine, twoMachine, threeMachine;
@@ -23,12 +23,13 @@ public class ExitController {
     private ToggleGroup toggleGroup;
     private RadioButton selected;
 
-    public void initialize(Boolean winOrLoss, String username) {
+    public void initialize(Boolean winOrLoss, String username, String message) {
+        typeLoss.setText(message);
         this.username = username;
         if (winOrLoss) {
-            lossOrWin.setText("Your loss");
+            lossOrWin.setText("Your loss!!");
         } else {
-            lossOrWin.setText("You win");
+            lossOrWin.setText("You win!!");
         }
     }
 

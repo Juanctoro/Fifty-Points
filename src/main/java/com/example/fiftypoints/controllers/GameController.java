@@ -9,6 +9,7 @@ import com.example.fiftypoints.models.CardModel;
 import com.example.fiftypoints.models.GameModel;
 import com.example.fiftypoints.models.MachineModel;
 import com.example.fiftypoints.views.ExitView;
+import com.example.fiftypoints.models.lossTypes;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -43,6 +44,8 @@ public class GameController{
     private ToggleGroup toggleGroupA;
     private CardDrawingStrategy cardDrawingStrategy;
     private int indexRemove;
+    private boolean passFiftyPoints = false;
+    public boolean invalidCards = false;
 
     @FXML
     private Label playerUsername, state, sumOfPoints, machineLoss;
@@ -198,6 +201,9 @@ public class GameController{
     }
 
     public void turnManagement() {
+        if (gameOver) {
+            return;
+        }
         TurnsThread turns = new TurnsThread(this);
         turns.start();
         if (playerTurn) {
@@ -210,16 +216,18 @@ public class GameController{
             }
             PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
             pause.setOnFinished(event -> {
-                for (int i = 0; i < machine.length; i++) {
+                for (int i = 0; i < gameFacade.getGameModel().getMachines(); i++) {
                     if (machine[i] && !lossPlayer[i + 1]) {
                         state.setText("Machine's " + (i + 2) + " turn");
                         if(i==2){
                             state.setText("Machine's " + (i + 1) + " turn");
                         }
-                        handleMachineTurn(getMachineByIndex(i), i + 1);
                         if (gameFacade.getGameModel().getMachines() > i + 1) {
                             machine[i + 1] = true;
+                        } else {
+                            playerTurn = true;
                         }
+                        handleMachineTurn(getMachineByIndex(i), i + 1);
                         machine[i] = false;
                         setCard();
                         turnManagement();
@@ -339,6 +347,7 @@ public class GameController{
         if(gameFacade.getPoints() > 50){
             gameOver = true;
             lossPlayer[0] = true;
+            passFiftyPoints = true;
             playerLoss();
         }
         setCard();
@@ -395,6 +404,12 @@ public class GameController{
     }
 
     public void exitView(boolean game) throws IOException {
+        String message = "You beat the machines";
+        try {
+            CheckLossType(invalidCards, passFiftyPoints);
+        } catch (lossTypes.ExcessPointsException | lossTypes.InvalidCardsException e) {
+            message = e.getMessage();
+        }
         ExitView exitView = ExitView.getInstance();
         exitView.setOnHiding(event -> {
             for (Window window : Stage.getWindows()) {
@@ -404,7 +419,16 @@ public class GameController{
             }
         });
         ExitController exitViewController = exitView.getExitController();
-        exitViewController.initialize(game, this.username);
+        exitViewController.initialize(game, this.username, message);
+    }
+
+    public void CheckLossType(boolean invalidCards, boolean passFiftyPoints) throws lossTypes.InvalidCardsException, lossTypes.ExcessPointsException {
+        if (invalidCards) {
+            throw new lossTypes.InvalidCardsException("You have no cards to throw away");
+        }
+        if (passFiftyPoints) {
+            throw new lossTypes.ExcessPointsException("You passed 50 points");
+        }
     }
 
     public synchronized boolean[] getMachineState() {
@@ -428,6 +452,10 @@ public class GameController{
 
     public synchronized void setGameOver(boolean gameOver) {
         this.gameOver = gameOver;
+    }
+
+    public synchronized boolean getGameOver() {
+        return gameOver;
     }
 
     public synchronized GameFacade getGameFacade() {
