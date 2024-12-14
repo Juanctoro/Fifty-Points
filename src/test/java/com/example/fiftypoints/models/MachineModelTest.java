@@ -5,12 +5,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class MachineModelTest {
 
-    /**
-     * This test suite verifies the functionality of the `throwCard` method in the `MachineModel` class.
-     * The `throwCard(int position)` method is designed to select and return a card from a machine's hand
-     * that adheres to specific game rules, altering the hand by removing the selected card.
-     */
-
     @Test
     void testThrowCard_NumberParsingNineToZero() {
         CardModel[] cards = {new CardModel("9", "hearts"), new CardModel("5", "diamonds")};
