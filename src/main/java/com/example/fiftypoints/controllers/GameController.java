@@ -51,6 +51,7 @@ public class GameController{
     private int indexRemove;
     private boolean passFiftyPoints = false;
     public boolean invalidCards = false;
+    private boolean timePause = false;
 
     @FXML
     private Label playerUsername, state, sumOfPoints, machineLoss;
@@ -328,7 +329,7 @@ public class GameController{
         }
         TurnsThread turns = new TurnsThread(this);
         turns.start();
-        if (playerTurn) {
+        if (playerTurn && timePause) {
             Platform.runLater(() -> state.setText("Your turn"));
             state.setDisable(false);
         } else {
@@ -336,13 +337,14 @@ public class GameController{
             if(machine[0]){
                 Platform.runLater(() -> state.setText("Machine's 1 turn"));
             }
-            PauseTransition pause = new PauseTransition(Duration.seconds(1.5));
+            PauseTransition pause = new PauseTransition(Duration.seconds(1));
             pause.setOnFinished(event -> {
                 for (int i = 0; i < gameFacade.getGameModel().getMachines(); i++) {
                     if (machine[i] && !lossPlayer[i + 1]) {
-                        state.setText("Machine's " + (i + 2) + " turn");
-                        if(i==2){
-                            state.setText("Machine's " + (i + 1) + " turn");
+                        if(gameFacade.getGameModel().getMachines() > 1){
+                            if(i==0 || (i==1 && gameFacade.getGameModel().getMachines() == 3)){
+                                state.setText("Machine's " + (i + 2) + " turn");
+                            }
                         }
                         if (gameFacade.getGameModel().getMachines() > i + 1) {
                             machine[i + 1] = true;
@@ -400,10 +402,11 @@ public class GameController{
             lossPlayer[machineIndex] = true;
             gameFacade.getGameModel().lossMachine(machine, machineIndex);
             removeCardsMachines(machineIndex - 1);
-            if(machineIndex <=2 ){
-                this.machine[machineIndex-1] = true;
+            if (machineIndex <= 2) {
+                this.machine[machineIndex - 1] = true;
             } else {
                 this.playerTurn = true;
+                timePause = true;
             }
             turnManagement();
             isLoss();
@@ -421,8 +424,9 @@ public class GameController{
             pause.setOnFinished(event -> {
                 Group cardSet = cardDrawingStrategy.drawCardBack();
                 cardDrawingStrategy.addCardToGridPane(cardSet, machinesGrid, indexRemove,0);
-                if(machineIndex == 3){
+                if(machineIndex == gameFacade.getGameModel().getMachines()){
                     playerTurn = true;
+                    timePause = true;
                     turnManagement();
                 }
             });
@@ -513,6 +517,7 @@ public class GameController{
      */
     public void throwCard(){
         this.playerTurn = false;
+        timePause = false;
         throwCard.setDisable(true);
         state.setDisable(true);
         if(gameFacade.setNumber(cardNumber, true) == 11){
@@ -597,11 +602,11 @@ public class GameController{
     /**
      * Handles the scenario where a player loses the game.
      * This method disables the card throwing functionality for the player,
-     * sets the player's turn status to false, and transitions to the game over view.
+     * sets the player's turn status to false, and transitions to the game overview.
      * The transition is executed on the JavaFX Application Thread to ensure UI updates
      * are performed in a thread-safe manner.
      *
-     * @throws RuntimeException if an IOException occurs during the transition to the game over view.
+     * @throws RuntimeException if an IOException occurs during the transition to the game overview.
      */
     public void playerLoss(){
         throwCard.setDisable(true);
