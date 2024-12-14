@@ -12,6 +12,18 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 public class DrawCard {
+    /**
+     * Creates a visual representation of a playing card based on the provided number and suit.
+     * The card includes a white background with rounded corners, numerical values displayed
+     * at the top and bottom, and a suit symbol centered on the card. Additionally, the suit
+     * color (red or black) is determined by the suit type.
+     *
+     * @param number the numerical or face value of the card (e.g., "2", "10", "K", "A").
+     * @param suit the suit of the card, specified as one of the four possible suits:
+     *             "Hearts", "Diamonds", "Clubs", or "Spades".
+     * @return a Group containing the graphical elements (background, numbers, and suit
+     *         symbol) that visually represent the specified card.
+     */
     public Group drawCard(String number, String suit) {
         Paint color;
 
@@ -74,6 +86,15 @@ public class DrawCard {
         return new Group(cardBackground, topNumber, bottomNumber, suitSymbol);
     }
 
+    /**
+     * Creates a graphical representation of the back side of a playing card.
+     * The card back is styled with a dark-themed background, bordered with
+     * rounded corners, and includes decorative elements such as circles,
+     * lines, and gradients to enhance its visual design.
+     *
+     * @return a Group containing the graphical elements that represent
+     *         the back side of a playing card.
+     */
     public Group drawCardBack() {
         double cardWidth = 80;
         double cardHeight = 120;

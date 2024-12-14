@@ -28,14 +28,35 @@ public class ExitView extends Stage {
         this.show();
     }
 
-    public ExitController getExitController() throws IOException {
+    /**
+     * Retrieves the ExitController associated with this ExitView.
+     * The ExitController handles logic related to the exit or play again
+     * functionality in the application.
+     *
+     * @return the ExitController instance tied to this ExitView
+     */
+    public ExitController getExitController(){
         return this.exitController;
     }
 
+    /**
+     * A holder class used to implement the Singleton pattern for the {@link ExitView} class.
+     * This class contains a static reference to the single instance of {@link ExitView}.
+     * The instance is lazily initialized and accessed through the {@link ExitView#getInstance()} method.
+     */
     private static class ExitViewHolder {
         private static ExitView INSTANCE;
     }
 
+    /**
+     * Provides access to the singleton instance of ExitView.
+     * If the instance does not exist, it is created; otherwise, the existing
+     * instance is returned. This method ensures that only one instance of
+     * ExitView is created and managed throughout the application's lifecycle.
+     *
+     * @return the singleton instance of ExitView
+     * @throws IOException if there is an issue during the creation of the instance
+     */
     public static ExitView getInstance() throws IOException {
 
         if (ExitView.ExitViewHolder.INSTANCE == null) {
