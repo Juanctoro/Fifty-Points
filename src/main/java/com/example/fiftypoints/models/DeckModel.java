@@ -19,7 +19,7 @@ public class DeckModel implements IDeck {
      * Constructs a DeckModel instance.
      * This constructor is private to enforce the Singleton design pattern
      * and prevent direct instantiation of the class.
-     *
+     * <p>
      * Initializes the deck by allocating memory for the card collections
      * and populates them using the generateDeck method.
      */

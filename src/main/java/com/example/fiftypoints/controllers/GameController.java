@@ -635,6 +635,7 @@ public class GameController{
             message = e.getMessage();
         }
         ExitView exitView = ExitView.getInstance();
+        exitView.show();
         exitView.setOnHiding(event -> {
             for (Window window : Stage.getWindows()) {
                 if (window.isShowing()) {

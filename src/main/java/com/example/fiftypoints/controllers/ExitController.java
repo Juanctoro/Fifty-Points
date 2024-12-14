@@ -36,6 +36,7 @@ public class ExitController {
      * @param message the message to display on the loss information label
      */
     public void initialize(Boolean winOrLoss, String username, String message) {
+        reset();
         typeLoss.setText(message);
         this.username = username;
         if (winOrLoss) {
@@ -111,5 +112,20 @@ public class ExitController {
         gameView.show();
         GameController gameController = gameView.getGameController();
         gameController.initialize(username, machine);
+    }
+
+    public void reset() {
+        typeLoss.setText("");
+        lossOrWin.setText("");
+        oneMachine.setVisible(false);
+        twoMachine.setVisible(false);
+        threeMachine.setVisible(false);
+        machinesLabel.setVisible(false);
+        play.setVisible(false);
+        play.setDisable(true);
+        if (toggleGroup != null) {
+            toggleGroup.getToggles().clear();
+        }
+        selected = null;
     }
 }
